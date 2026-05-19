@@ -502,7 +502,7 @@ function clearAll() {
 }
 
 // === Sample Texts ===
-var samples = [
+var samplesZh = [
   '大型語言模型（Large Language Model, LLM）透過自注意力機制（Self-Attention Mechanism）捕捉長距離語境依賴關係，並利用多層 Transformer 架構進行表徵學習。在預訓練階段，模型以大規模語料庫進行自監督學習，透過預測下一個 Token 的方式逐步最佳化參數。隨後透過指令微調（Instruction Tuning）與 RLHF（Reinforcement Learning from Human Feedback）使模型對齊人類偏好，實現卓越的自然語言理解與生成能力。',
 
   '量子計算（Quantum Computing）利用量子疊加（Superposition）與量子糾纏（Entanglement）等量子力學基本原理來處理資訊。與傳統計算機使用 0 或 1 的位元不同，量子位元（Qubit）可以同時處於 0 和 1 的疊加態，使量子計算機能夠並行處理極大量的可能性。Shor 演算法展示了量子計算在破解 RSA 加密上的潛在優勢，而 Grover 演算法則能在無序資料庫中實現二次加速搜尋。',
@@ -510,7 +510,16 @@ var samples = [
   '區塊鏈技術本質上是一種去中心化的分散式帳本（Distributed Ledger），透過共識機制（Consensus Mechanism）如工作量證明（Proof of Work）或權益證明（Proof of Stake）來確保資料不可篡改性。智能合約（Smart Contract）則是運行在區塊鏈上的自動化程式，當預設條件被觸發時自動執行合約條款。DeFi（去中心化金融）利用這些技術建立無需中介的金融服務生態，包括借貸、交易與流動性挖礦等應用。'
 ];
 
+var samplesEn = [
+  'The transformer architecture revolutionized natural language processing by introducing the self-attention mechanism, which allows each token in a sequence to attend to every other token simultaneously. Unlike recurrent neural networks that process tokens sequentially, transformers process the entire sequence in parallel, enabling training on vastly larger datasets. The multi-head attention mechanism further improves this by allowing the model to focus on different representation subspaces at different positions.',
+
+  'Quantum computing harnesses fundamental principles of quantum mechanics — superposition and entanglement — to process information in ways classical computers cannot. While a classical bit must be either 0 or 1, a quantum bit (qubit) can exist in a superposition of both states simultaneously. This exponential parallelism allows quantum algorithms like Shor\'s algorithm to theoretically break RSA encryption, and Grover\'s algorithm to search unsorted databases with quadratic speedup.',
+
+  'Blockchain technology is fundamentally a decentralized distributed ledger secured by consensus mechanisms such as Proof of Work (PoW) or Proof of Stake (PoS). Each block contains a cryptographic hash of the previous block, creating an immutable chain. Smart contracts are self-executing programs deployed on the blockchain — when predefined conditions are met, the contract automatically executes. Decentralized Finance (DeFi) leverages these primitives to build permissionless financial services including lending, trading, and yield farming.'
+];
+
 function loadSample() {
+  var samples = state.language === 'en' ? samplesEn : samplesZh;
   var sample = samples[Math.floor(Math.random() * samples.length)];
   textInput.value = sample;
   onTextInput();
