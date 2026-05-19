@@ -61,14 +61,15 @@ const PROVIDERS = {
   }
 };
 
-function loadPromptTemplate(difficulty) {
+function loadPromptTemplate(difficulty, language) {
+  const lang = language || 'zh';
   const fileMap = { elementary: 'elementary.txt', secondary: 'secondary.txt', 'working-adult': 'working-adult.txt' };
   const file = fileMap[difficulty] || 'secondary.txt';
-  return fs.readFileSync(path.join(PROMPTS_DIR, file), 'utf-8');
+  return fs.readFileSync(path.join(PROMPTS_DIR, lang, file), 'utf-8');
 }
 
-function buildPrompt(text, difficulty) {
-  const template = loadPromptTemplate(difficulty);
+function buildPrompt(text, difficulty, language) {
+  const template = loadPromptTemplate(difficulty, language);
   return template + '\n' + text + '\n';
 }
 
@@ -81,13 +82,16 @@ function estimateCost(textLength, provider, difficulty) {
   return { inputTokens, outputTokens, estimatedUSD: inputCost + outputCost, currency: p.currency };
 }
 
-async function callAI(providerId, apiKey, text, difficulty) {
+async function callAI(providerId, apiKey, text, difficulty, language) {
   const p = PROVIDERS[providerId];
   if (!p) throw new Error('Unknown provider: ' + providerId);
 
-  const prompt = buildPrompt(text, difficulty);
+  const prompt = buildPrompt(text, difficulty, language);
+  const sysMsg = (language === 'en')
+    ? 'You are a helpful explanation tool. Follow the format exactly.'
+    : '你係一個翻譯同解釋工具。跟住格式輸出。';
   const messages = [
-    { role: 'system', content: '你係一個翻譯同解釋工具。只輸出 JSON。' },
+    { role: 'system', content: sysMsg },
     { role: 'user', content: prompt }
   ];
 
