@@ -191,22 +191,22 @@ body {
 <!-- Onboarding Overlay -->
 <div class="onboard-overlay" id="onboardOverlay">
   <div class="onboard-card">
-    <h2 id="onboardTitle" data-en="Welcome! 3 Steps 👋" data-zh="歡迎！三步開始 👋">歡迎！三步開始 👋</h2>
+    <h2 id="onboardTitle" data-en="Welcome! 3 Steps 👋" data-zh="歡迎！三步開始 👋" data-zh-cn="欢迎！三步开始 👋">歡迎！三步開始 👋</h2>
     <div class="onboard-steps">
       <div class="onboard-step active" data-step="1">
         <span class="step-num">1</span>
-        <span data-en="Set up API Key (pick AI + enter key)" data-zh="設定 API Key（揀 AI + 入 key）">設定 API Key（揀 AI + 入 key）</span>
+        <span data-en="Set up API Key (pick AI + enter key)" data-zh="設定 API Key（揀 AI + 入 key）" data-zh-cn="设置 API Key（选 AI + 输入 key）">設定 API Key（揀 AI + 入 key）</span>
       </div>
       <div class="onboard-step" data-step="2">
         <span class="step-num">2</span>
-        <span data-en="Paste text (content you want to understand)" data-zh="貼文字（貼你想理解嘅內容）">貼文字（貼你想理解嘅內容）</span>
+        <span data-en="Paste text (content you want to understand)" data-zh="貼文字（貼你想理解嘅內容）" data-zh-cn="贴文字（贴你想理解的内容）">貼文字（貼你想理解嘅內容）</span>
       </div>
       <div class="onboard-step" data-step="3">
         <span class="step-num">3</span>
-        <span data-en="Choose difficulty → Explain" data-zh="揀難度 → 解讀">揀難度 → 解讀</span>
+        <span data-en="Choose difficulty → Explain" data-zh="揀難度 → 解讀" data-zh-cn="选难度 → 解读">揀難度 → 解讀</span>
       </div>
     </div>
-    <button class="btn-primary" id="onboardNext" data-en="Start →" data-zh="開始 →">開始 →</button>
+    <button class="btn-primary" id="onboardNext" data-en="Start →" data-zh="開始 →" data-zh-cn="开始 →">開始 →</button>
   </div>
 </div>
 
@@ -215,9 +215,9 @@ body {
   <div class="nav-inner">
     <span class="nav-logo">💡 easytounderstand</span>
     <div class="nav-actions">
-      <button class="icon-btn" id="settingsBtn" title="API 設定" data-en-title="Settings" data-zh-title="API 設定">⚙️</button>
+      <button class="icon-btn" id="settingsBtn" title="API 設定" data-en-title="Settings" data-zh-title="API 設定" data-zh-cn-title="API 设置">⚙️</button>
       <button class="icon-btn" id="langToggle" title="Language">EN</button>
-      <button class="icon-btn" id="themeToggle" title="深淺色切換" data-en-title="Dark/Light" data-zh-title="深淺色切換">🌙</button>
+      <button class="icon-btn" id="themeToggle" title="深淺色切換" data-en-title="Dark/Light" data-zh-title="深淺色切換" data-zh-cn-title="深浅色切换">🌙</button>
     </div>
   </div>
 </nav>
@@ -226,26 +226,26 @@ body {
 <div class="modal-overlay" id="settingsModal">
   <div class="modal-card">
     <div class="modal-header">
-      <h3 data-en="⚙️ API Settings" data-zh="⚙️ API 設定">⚙️ API 設定</h3>
+      <h3 data-en="⚙️ API Settings" data-zh="⚙️ API 設定" data-zh-cn="⚙️ API 设置">⚙️ API 設定</h3>
       <button class="close-btn" id="closeSettings">✕</button>
     </div>
     <div class="modal-body">
       <div class="form-group">
-        <label data-en="AI Engine" data-zh="AI 引擎">AI 引擎</label>
+        <label data-en="AI Engine" data-zh="AI 引擎" data-zh-cn="AI 引擎">AI 引擎</label>
         <select id="providerSelect"></select>
       </div>
       <div class="form-group" id="providerInfo"></div>
       <div class="form-group">
         <label>API Key</label>
         <div class="key-row">
-          <input type="password" id="apiKeyInput" placeholder="貼上你嘅 API key..." data-en-placeholder="Paste your API key..." data-zh-placeholder="貼上你嘅 API key...">
-          <button class="btn-secondary btn-sm" id="testConnBtn" data-en="Test Connection" data-zh="測試連線">測試連線</button>
+          <input type="password" id="apiKeyInput" placeholder="貼上你嘅 API key..." data-en-placeholder="Paste your API key..." data-zh-placeholder="貼上你嘅 API key..." data-zh-cn-placeholder="贴上你的 API key...">
+          <button class="btn-secondary btn-sm" id="testConnBtn" data-en="Test Connection" data-zh="測試連線" data-zh-cn="测试连接">測試連線</button>
         </div>
         <span class="form-hint" id="testResult"></span>
       </div>
       <div class="form-group">
-        <button class="btn-primary" id="saveConfigBtn" data-en="Save Settings" data-zh="儲存設定">儲存設定</button>
-        <span class="save-toast" id="saveToast" data-en="Saved ✅" data-zh="已儲存 ✅">已儲存 ✅</span>
+        <button class="btn-primary" id="saveConfigBtn" data-en="Save Settings" data-zh="儲存設定" data-zh-cn="保存设置">儲存設定</button>
+        <span class="save-toast" id="saveToast" data-en="Saved ✅" data-zh="已儲存 ✅" data-zh-cn="已保存 ✅">已儲存 ✅</span>
       </div>
     </div>
   </div>
@@ -257,38 +257,38 @@ body {
   <!-- Left Column -->
   <section class="panel panel-left">
     <div class="panel-header">
-      <h2 data-en="📝 Original Text" data-zh="📝 原文">📝 原文</h2>
+      <h2 data-en="📝 Original Text" data-zh="📝 原文" data-zh-cn="📝 原文">📝 原文</h2>
       <div class="panel-header-actions">
-        <button class="btn-sm" id="pasteBtn" data-en="📎 Paste" data-zh="📎 貼上">📎 貼上</button>
-        <button class="btn-sm" id="clearBtn" data-en="🗑 Clear" data-zh="🗑 清除">🗑 清除</button>
+        <button class="btn-sm" id="pasteBtn" data-en="📎 Paste" data-zh="📎 貼上" data-zh-cn="📎 粘贴">📎 貼上</button>
+        <button class="btn-sm" id="clearBtn" data-en="🗑 Clear" data-zh="🗑 清除" data-zh-cn="🗑 清除">🗑 清除</button>
       </div>
     </div>
-    <textarea id="textInput" class="text-input" placeholder="喺度貼你想理解嘅文字..." data-en-placeholder="Paste the text you want to understand..." data-zh-placeholder="喺度貼你想理解嘅文字..."></textarea>
+    <textarea id="textInput" class="text-input" placeholder="喺度貼你想理解嘅文字..." data-en-placeholder="Paste the text you want to understand..." data-zh-placeholder="喺度貼你想理解嘅文字..." data-zh-cn-placeholder="在这里贴你想理解的文字..."></textarea>
     <div class="input-meta" id="inputMeta"></div>
-    <button class="btn-sm btn-outline" id="sampleBtn" data-en="💡 Try Sample Text" data-zh="💡 試下範例文字">💡 試下範例文字</button>
+    <button class="btn-sm btn-outline" id="sampleBtn" data-en="💡 Try Sample Text" data-zh="💡 試下範例文字" data-zh-cn="💡 试试示例文字">💡 試下範例文字</button>
 
     <div class="paragraphs-container" id="paragraphsContainer"></div>
 
     <div class="action-bar" id="actionBar">
       <div class="difficulty-selector" id="difficultySelector">
-        <button class="diff-btn" data-level="elementary" data-en="🎒 Kid" data-zh="🎒 小學">🎒 小學</button>
-        <button class="diff-btn active" data-level="secondary" data-en="🎓 Teen" data-zh="🎓 中學">🎓 中學</button>
-        <button class="diff-btn" data-level="working-adult" data-en="💼 Working Adult" data-zh="💼 上班">💼 上班</button>
+        <button class="diff-btn" data-level="elementary" data-en="🎒 Kid" data-zh="🎒 小學" data-zh-cn="🎒 小学">🎒 小學</button>
+        <button class="diff-btn active" data-level="secondary" data-en="🎓 Teen" data-zh="🎓 中學" data-zh-cn="🎓 中学">🎓 中學</button>
+        <button class="diff-btn" data-level="working-adult" data-en="💼 Working Adult" data-zh="💼 上班" data-zh-cn="💼 上班族">💼 上班</button>
       </div>
-      <button class="btn-primary btn-explain" id="explainBtn" disabled data-en="🔍 Explain Selected Paragraph" data-zh="🔍 解讀選中嘅段落">🔍 解讀選中嘅段落</button>
+      <button class="btn-primary btn-explain" id="explainBtn" disabled data-en="🔍 Explain Selected Paragraph" data-zh="🔍 解讀選中嘅段落" data-zh-cn="🔍 解读选中的段落">🔍 解讀選中嘅段落</button>
     </div>
   </section>
 
   <!-- Right Column -->
   <section class="panel panel-right">
     <div class="panel-header">
-      <h2 data-en="✨ Plain Explanation" data-zh="✨ 白話解讀">✨ 白話解讀</h2>
+      <h2 data-en="✨ Plain Explanation" data-zh="✨ 白話解讀" data-zh-cn="✨ 白话解读">✨ 白話解讀</h2>
     </div>
     <div class="output-area" id="outputArea">
       <div class="output-placeholder" id="outputPlaceholder">
-        <p data-en="👈 Paste text on the left," data-zh="👈 喺左邊貼文字，">👈 喺左邊貼文字，</p>
-        <p data-en="select a paragraph," data-zh="選擇段落，">選擇段落，</p>
-        <p data-en="then click Explain" data-zh="然後按「解讀」">然後按「解讀」</p>
+        <p data-en="👈 Paste text on the left," data-zh="👈 喺左邊貼文字，" data-zh-cn="👈 在左边贴文字，">👈 喺左邊貼文字，</p>
+        <p data-en="select a paragraph," data-zh="選擇段落，" data-zh-cn="选择段落，">選擇段落，</p>
+        <p data-en="then click Explain" data-zh="然後按「解讀」" data-zh-cn="然后按「解读」">然後按「解讀」</p>
       </div>
       <div class="output-loading" id="outputLoading">
         <div class="spinner"></div>
@@ -427,7 +427,9 @@ function updateProviderInfo() {
     if (p) {
       providerInfo.innerHTML = (state.language === 'en' ?
         '💰 Input: $' + p.costPer1MInput + '/1M tokens · Output: $' + p.costPer1MOutput + '/1M tokens · ' + p.currency :
-        '💰 入: $' + p.costPer1MInput + '/百萬 token · 出: $' + p.costPer1MOutput + '/百萬 token · ' + p.currency);
+        (state.language === 'zh-cn' ?
+          '💰 入: $' + p.costPer1MInput + '/百万 token · 出: $' + p.costPer1MOutput + '/百万 token · ' + p.currency :
+          '💰 入: $' + p.costPer1MInput + '/百萬 token · 出: $' + p.costPer1MOutput + '/百萬 token · ' + p.currency));
     }
   });
 }
@@ -435,17 +437,17 @@ function updateProviderInfo() {
 function testConnection() {
   var provider = providerSelect.value;
   var apiKey = apiKeyInput.value.trim();
-  if (!apiKey) { testResult.textContent = state.language === 'en' ? 'Please enter API key first' : '請先輸入 API key'; testResult.className = 'form-hint error'; return; }
-  testResult.textContent = state.language === 'en' ? 'Testing...' : '測試緊...'; testResult.className = 'form-hint';
+  if (!apiKey) { testResult.textContent = state.language === 'en' ? 'Please enter API key first' : (state.language === 'zh-cn' ? '请先输入 API key' : '請先輸入 API key'); testResult.className = 'form-hint error'; return; }
+  testResult.textContent = state.language === 'en' ? 'Testing...' : (state.language === 'zh-cn' ? '测试中...' : '測試緊...'); testResult.className = 'form-hint';
   fetch('/api/test-connection', {
     method: 'POST', headers: {'Content-Type':'application/json'},
     body: JSON.stringify({provider:provider, apiKey:apiKey})
   }).then(function(r) { return r.json(); }).then(function(data) {
-    if (data.ok) { testResult.textContent = state.language === 'en' ? 'Connected ✅' : '連線成功 ✅'; testResult.className = 'form-hint success'; }
-    else if (data.error === 'auth_error') { testResult.textContent = state.language === 'en' ? 'Key seems wrong, double check it～ 🔑' : 'Key 似乎有問題，檢查下啦～ 🔑'; testResult.className = 'form-hint error'; }
-    else { testResult.textContent = (state.language === 'en' ? 'Connection failed: ' : '連線失敗：') + (data.error || 'unknown'); testResult.className = 'form-hint error'; }
+    if (data.ok) { testResult.textContent = state.language === 'en' ? 'Connected ✅' : (state.language === 'zh-cn' ? '连接成功 ✅' : '連線成功 ✅'); testResult.className = 'form-hint success'; }
+    else if (data.error === 'auth_error') { testResult.textContent = state.language === 'en' ? 'Key seems wrong, double check it～ 🔑' : (state.language === 'zh-cn' ? 'Key 好像有问题，检查一下吧～ 🔑' : 'Key 似乎有問題，檢查下啦～ 🔑'); testResult.className = 'form-hint error'; }
+    else { testResult.textContent = (state.language === 'en' ? 'Connection failed: ' : (state.language === 'zh-cn' ? '连接失败：' : '連線失敗：')) + (data.error || 'unknown'); testResult.className = 'form-hint error'; }
   }).catch(function() {
-    testResult.textContent = state.language === 'en' ? 'Cannot reach the AI server, check your network 🌐' : '連唔到去 AI 伺服器，檢查下網絡啦 🌐';
+    testResult.textContent = state.language === 'en' ? 'Cannot reach the AI server, check your network 🌐' : (state.language === 'zh-cn' ? '连不上 AI 服务器，检查下网络吧 🌐' : '連唔到去 AI 伺服器，檢查下網絡啦 🌐');
     testResult.className = 'form-hint error';
   });
 }
@@ -479,13 +481,14 @@ function updateMeta() {
   var text = textInput.value;
   var chars = text.length;
   var isEn = state.language === 'en';
+  var isCn = state.language === 'zh-cn';
   var html = chars + (isEn ? ' chars' : ' 字');
   if (chars > 0 && state.provider) {
     fetch('/api/estimate', {
       method: 'POST', headers: {'Content-Type':'application/json'},
       body: JSON.stringify({textLength:chars, provider:state.provider})
     }).then(function(r) { return r.json(); }).then(function(e) {
-      inputMeta.innerHTML = chars + (isEn ? ' chars · ~' : ' 字 · 約 ') + e.inputTokens + ' tokens · ' + (isEn ? 'Est. cost ~$' : '估費用 ~$') + e.estimatedUSD.toFixed(4) + ' ' + e.currency;
+      inputMeta.innerHTML = chars + (isEn ? ' chars · ~' : (isCn ? ' 字 · 约 ' : ' 字 · 約 ')) + e.inputTokens + ' tokens · ' + (isEn ? 'Est. cost ~$' : (isCn ? '估费用 ~$' : '估費用 ~$')) + e.estimatedUSD.toFixed(4) + ' ' + e.currency;
     });
   } else {
     inputMeta.innerHTML = html;
@@ -554,9 +557,10 @@ function doExplain() {
   outputContent.style.display = 'none';
   outputLoading.style.display = 'flex';
   var diffTextsZh = { elementary: 'AI 老師而家用故事書方式講緊畀你聽哦～ 📖', secondary: 'AI 正在用白話幫你翻譯緊...', 'working-adult': 'AI 顧問幫你分析緊重點... 💼' };
+  var diffTextsCn = { elementary: 'AI 老师正在用讲故事的方式讲给你听哦～ 📖', secondary: 'AI 正在用白话帮你翻译中...', 'working-adult': 'AI 顾问正在帮你分析重点... 💼' };
   var diffTextsEn = { elementary: 'AI teacher is explaining to you with a story～ 📖', secondary: 'AI is translating into plain language...', 'working-adult': 'AI is analyzing the key points for you... 💼' };
-  var diffTexts = state.language === 'en' ? diffTextsEn : diffTextsZh;
-  loadingText.textContent = diffTexts[state.difficulty] || (state.language === 'en' ? 'AI is translating into plain language...' : 'AI 正在用白話幫你翻譯緊...');
+  var diffTexts = state.language === 'en' ? diffTextsEn : (state.language === 'zh-cn' ? diffTextsCn : diffTextsZh);
+  loadingText.textContent = diffTexts[state.difficulty] || (state.language === 'en' ? 'AI is translating into plain language...' : (state.language === 'zh-cn' ? 'AI 正在用白话帮你翻译中...' : 'AI 正在用白話幫你翻譯緊...'));
 
   fetch('/api/explain', {
     method: 'POST', headers: {'Content-Type':'application/json'},
@@ -579,17 +583,25 @@ function doExplain() {
 }
 
 function showError(code) {
-  var messages = state.language === 'en' ? {
+  var messagesEn = {
     auth_error: 'API key seems wrong, double check it～ 🔑',
     quota_exceeded: "You've used up your quota! Top up on the platform 💰",
     content_too_long: "This text is too long, try explaining paragraph by paragraph～ 📏",
     unknown: "Something went wrong, try again 🥲"
-  } : {
+  };
+  var messagesCn = {
+    auth_error: 'Key 好像有问题，检查一下吧～ 🔑',
+    quota_exceeded: '这个月的用量用完了！去平台充值吧 💰',
+    content_too_long: '这篇内容太长了，试试逐段解读～ 📏',
+    unknown: '不知道发生了什么，再试一次吧 🥲'
+  };
+  var messagesZh = {
     auth_error: 'Key 似乎有問題，檢查下啦～ 🔑',
     quota_exceeded: '今個月嘅用量爆咗啦！去平台入錢啦 💰',
     content_too_long: '呢篇嘢太長啦，試下逐段解讀～ 📏',
     unknown: '唔知發生咩事，再試一次啦 🥲'
   };
+  var messages = state.language === 'en' ? messagesEn : (state.language === 'zh-cn' ? messagesCn : messagesZh);
   outputContent.innerHTML = '<div class="output-section"><p>' + (messages[code] || messages.unknown) + '</p></div>';
   outputContent.style.display = 'flex';
 }
@@ -610,11 +622,11 @@ function showResult(text) {
     p.textContent = body || title;
     var copyBtn = document.createElement('button');
     copyBtn.className = 'copy-btn';
-    copyBtn.textContent = state.language === 'en' ? 'Copy' : '複製';
+    copyBtn.textContent = state.language === 'en' ? 'Copy' : (state.language === 'zh-cn' ? '复制' : '複製');
     copyBtn.addEventListener('click', function() {
       navigator.clipboard.writeText(title + '\n' + body);
-      copyBtn.textContent = state.language === 'en' ? 'Copied!' : '已複製!';
-      setTimeout(function() { copyBtn.textContent = state.language === 'en' ? 'Copy' : '複製'; }, 1500);
+      copyBtn.textContent = state.language === 'en' ? 'Copied!' : (state.language === 'zh-cn' ? '已复制!' : '已複製!');
+      setTimeout(function() { copyBtn.textContent = state.language === 'en' ? 'Copy' : (state.language === 'zh-cn' ? '复制' : '複製'); }, 1500);
     });
     secDiv.appendChild(h3);
     secDiv.appendChild(p);
@@ -627,15 +639,15 @@ function showResult(text) {
   actionsDiv.className = 'output-actions';
   var copyAllBtn = document.createElement('button');
   copyAllBtn.className = 'btn-secondary';
-  copyAllBtn.textContent = state.language === 'en' ? '📋 Copy All' : '📋 複製全部';
+  copyAllBtn.textContent = state.language === 'en' ? '📋 Copy All' : (state.language === 'zh-cn' ? '📋 复制全部' : '📋 複製全部');
   copyAllBtn.addEventListener('click', function() {
     navigator.clipboard.writeText(text);
-    copyAllBtn.textContent = state.language === 'en' ? 'Copied!' : '已複製!';
-    setTimeout(function() { copyAllBtn.textContent = state.language === 'en' ? '📋 Copy All' : '📋 複製全部'; }, 1500);
+    copyAllBtn.textContent = state.language === 'en' ? 'Copied!' : (state.language === 'zh-cn' ? '已复制!' : '已複製!');
+    setTimeout(function() { copyAllBtn.textContent = state.language === 'en' ? '📋 Copy All' : (state.language === 'zh-cn' ? '📋 复制全部' : '📋 複製全部'); }, 1500);
   });
   var regenBtn = document.createElement('button');
   regenBtn.className = 'btn-secondary';
-  regenBtn.textContent = state.language === 'en' ? '🔄 Regenerate' : '🔄 重新生成';
+  regenBtn.textContent = state.language === 'en' ? '🔄 Regenerate' : (state.language === 'zh-cn' ? '🔄 重新生成' : '🔄 重新生成');
   regenBtn.addEventListener('click', doExplain);
 
   actionsDiv.appendChild(copyAllBtn);
@@ -645,13 +657,13 @@ function showResult(text) {
   // Feedback
   var feedbackDiv = document.createElement('div');
   feedbackDiv.className = 'feedback-row';
-  feedbackDiv.innerHTML = '<span>' + (state.language === 'en' ? 'How was this explanation?' : '呢個解釋點樣？') + '</span>';
+  feedbackDiv.innerHTML = '<span>' + (state.language === 'en' ? 'How was this explanation?' : (state.language === 'zh-cn' ? '这个解释怎么样？' : '呢個解釋點樣？')) + '</span>';
   var thumbsUp = document.createElement('button');
   thumbsUp.textContent = '👍';
-  thumbsUp.addEventListener('click', function() { feedbackDiv.innerHTML = '<span>' + (state.language === 'en' ? 'Thanks! Happy to help 🎉' : '多謝！好開心幫到你 🎉') + '</span>'; });
+  thumbsUp.addEventListener('click', function() { feedbackDiv.innerHTML = '<span>' + (state.language === 'en' ? 'Thanks! Happy to help 🎉' : (state.language === 'zh-cn' ? '多谢！好开心能帮到你 🎉' : '多謝！好開心幫到你 🎉')) + '</span>'; });
   var thumbsDown = document.createElement('button');
   thumbsDown.textContent = '👎';
-  thumbsDown.addEventListener('click', function() { feedbackDiv.innerHTML = '<span>' + (state.language === 'en' ? 'Got it, will keep improving 💪' : '收到，會繼續改進 💪') + '</span>'; });
+  thumbsDown.addEventListener('click', function() { feedbackDiv.innerHTML = '<span>' + (state.language === 'en' ? 'Got it, will keep improving 💪' : (state.language === 'zh-cn' ? '收到，会继续改进 💪' : '收到，會繼續改進 💪')) + '</span>'; });
   feedbackDiv.appendChild(thumbsUp);
   feedbackDiv.appendChild(thumbsDown);
   outputContent.appendChild(feedbackDiv);
@@ -712,6 +724,22 @@ function applyLanguage(lang) {
     if (t) el.title = t;
   });
 
+  // All elements with data-zh-cn
+  if (lang === 'zh-cn') {
+    document.querySelectorAll('[data-zh-cn]').forEach(function(el) {
+      var text = el.getAttribute('data-zh-cn');
+      if (text) el.textContent = text;
+    });
+    document.querySelectorAll('[data-zh-cn-placeholder]').forEach(function(el) {
+      var ph = el.getAttribute('data-zh-cn-placeholder');
+      if (ph) el.placeholder = ph;
+    });
+    document.querySelectorAll('[data-zh-cn-title]').forEach(function(el) {
+      var t = el.getAttribute('data-zh-cn-title');
+      if (t) el.title = t;
+    });
+  }
+
   // Refresh dynamic text
   if (textInput.value.trim()) updateMeta();
   updateProviderInfo();
@@ -723,14 +751,14 @@ var onboardStep = 0;
 var onboardSteps = [
   function() {
     settingsModal.classList.add('show');
-    $('onboardTitle').textContent = state.language === 'en' ? 'Step 1/3: Set up API Key' : '步驟 1/3：設定 API Key';
+    $('onboardTitle').textContent = state.language === 'en' ? 'Step 1/3: Set up API Key' : (state.language === 'zh-cn' ? '步骤 1/3：设置 API Key' : '步驟 1/3：設定 API Key');
   },
   function() {
     settingsModal.classList.remove('show');
-    $('onboardTitle').textContent = state.language === 'en' ? 'Step 2/3: Paste Text' : '步驟 2/3：貼文字';
+    $('onboardTitle').textContent = state.language === 'en' ? 'Step 2/3: Paste Text' : (state.language === 'zh-cn' ? '步骤 2/3：贴文字' : '步驟 2/3：貼文字');
   },
   function() {
-    $('onboardTitle').textContent = state.language === 'en' ? 'Step 3/3: Difficulty → Explain' : '步驟 3/3：揀難度 → 解讀';
+    $('onboardTitle').textContent = state.language === 'en' ? 'Step 3/3: Difficulty → Explain' : (state.language === 'zh-cn' ? '步骤 3/3：选难度 → 解读' : '步驟 3/3：揀難度 → 解讀');
   }
 ];
 
