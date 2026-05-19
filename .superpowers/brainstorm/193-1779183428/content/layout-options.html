@@ -1,0 +1,66 @@
+<h2>整體版面怎麼排？</h2>
+<p class="subtitle">你覺得哪種排版用起來最順手？</p>
+
+<div class="cards">
+  <div class="card" data-choice="single-column" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="background:var(--bg);border-radius:12px;padding:20px;text-align:center">
+        <div style="background:rgba(0,0,0,0.06);border-radius:8px;padding:12px;margin-bottom:12px;font-size:0.85rem">📝 輸入框（貼文字）</div>
+        <div style="display:flex;gap:8px;justify-content:center;margin-bottom:12px">
+          <div style="background:var(--accent);color:#fff;padding:4px 12px;border-radius:50px;font-size:0.75rem">難度：小學 中學 上班</div>
+          <div style="background:var(--accent);color:#fff;padding:4px 12px;border-radius:50px;font-size:0.75rem">🔘 轉換</div>
+        </div>
+        <div style="text-align:left">
+          <div style="background:rgba(0,0,0,0.04);border-radius:8px;padding:10px;margin-bottom:6px;font-size:0.75rem">📌 這段主要在講什麼</div>
+          <div style="background:rgba(0,0,0,0.04);border-radius:8px;padding:10px;margin-bottom:6px;font-size:0.75rem">💬 逐點解釋</div>
+          <div style="background:rgba(0,0,0,0.04);border-radius:8px;padding:10px;margin-bottom:6px;font-size:0.75rem">🧸 生活比喻</div>
+          <div style="background:rgba(0,0,0,0.04);border-radius:8px;padding:10px;font-size:0.75rem">✅ 總之一句話</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>上下直排</h3>
+      <p>輸入框在上 → 結果在下方。簡潔、好理解，像聊天一樣往下看。</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="two-column" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="background:var(--bg);border-radius:12px;padding:20px;display:flex;gap:12px">
+        <div style="flex:1;text-align:center">
+          <div style="font-size:0.75rem;margin-bottom:6px">📝 輸入</div>
+          <div style="background:rgba(0,0,0,0.06);border-radius:8px;padding:16px;font-size:0.75rem">貼上文字...</div>
+          <div style="background:var(--accent);color:#fff;padding:4px 8px;border-radius:50px;font-size:0.7rem;margin-top:8px">🔘 轉換</div>
+        </div>
+        <div style="flex:1;text-align:center">
+          <div style="font-size:0.75rem;margin-bottom:6px">✨ 結果</div>
+          <div style="background:rgba(0,0,0,0.06);border-radius:8px;padding:16px;font-size:0.75rem;text-align:left">
+            <div style="margin-bottom:4px">📌 總結...</div>
+            <div style="margin-bottom:4px">💬 解釋...</div>
+            <div>✅ 一句話...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>左右兩欄</h3>
+      <p>左邊輸入 → 右邊結果。適合大螢幕，可以邊看原文邊對照解釋。</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="step-by-step" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="background:var(--bg);border-radius:12px;padding:20px;text-align:center">
+        <div style="background:rgba(0,0,0,0.06);border-radius:8px;padding:12px;margin-bottom:10px;font-size:0.85rem">📝 步驟 1：貼上文字</div>
+        <div style="font-size:1.2rem;margin-bottom:8px">⬇️</div>
+        <div style="background:rgba(0,0,0,0.06);border-radius:8px;padding:12px;margin-bottom:10px;font-size:0.85rem">🎯 步驟 2：選難度</div>
+        <div style="font-size:1.2rem;margin-bottom:8px">⬇️</div>
+        <div style="background:var(--accent);color:#fff;border-radius:8px;padding:14px;font-size:0.85rem">✨ 步驟 3：看結果（展開）</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>逐步引導式</h3>
+      <p>每次只做一件事，像 wizard 逐步操作。適合新手，避免資訊太多。</p>
+    </div>
+  </div>
+</div>

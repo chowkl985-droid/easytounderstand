@@ -1,0 +1,96 @@
+<h2>你描述的版面：左邊輸入 + 右邊結果</h2>
+<p class="subtitle">這樣理解對嗎？</p>
+
+<div class="mockup" style="max-width:900px">
+  <div class="mockup-header">easytounderstand — 白話翻譯機</div>
+  <div class="mockup-body">
+    <div style="display:flex;gap:16px;min-height:500px">
+
+      <!-- Left Column -->
+      <div style="flex:1;display:flex;flex-direction:column;gap:12px">
+        <!-- Import Bar -->
+        <div style="display:flex;gap:8px;align-items:center">
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:0.8rem;flex:1;text-align:center">📄 上傳 PDF</div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:0.8rem;flex:1;text-align:center">🔗 貼上 URL</div>
+        </div>
+
+        <!-- Original Text Area -->
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;flex:1;overflow-y:auto">
+          <div style="font-size:0.75rem;color:var(--text-secondary);margin-bottom:8px">📋 原文（自動識別排列）</div>
+
+          <div style="background:rgba(0,113,227,0.08);border:2px solid var(--accent);border-radius:8px;padding:10px;margin-bottom:8px;font-size:0.8rem;cursor:pointer">
+            <strong>段落 1</strong><br>
+            人工智能技術在近年來取得了飛躍性的進展，深度學習模型的規模和複雜度...
+          </div>
+
+          <div style="background:rgba(0,0,0,0.03);border:1px solid transparent;border-radius:8px;padding:10px;margin-bottom:8px;font-size:0.8rem;cursor:pointer">
+            <strong>段落 2</strong><br>
+            Transformer 架構的出現徹底改變了自然語言處理領域...
+          </div>
+
+          <div style="background:rgba(0,0,0,0.03);border:1px solid transparent;border-radius:8px;padding:10px;margin-bottom:8px;font-size:0.8rem;cursor:pointer">
+            <strong>段落 3</strong><br>
+            然而，大型語言模型的訓練成本極其高昂，需要大量的計算資源...
+          </div>
+
+          <div style="background:rgba(0,0,0,0.03);border:1px solid transparent;border-radius:8px;padding:10px;margin-bottom:8px;font-size:0.8rem">
+            <strong>段落 4</strong><br>
+            未來的發展方向包括模型壓縮、知識蒸餾...
+          </div>
+        </div>
+
+        <!-- Action Bar -->
+        <div style="display:flex;gap:8px;align-items:center">
+          <div style="display:flex;gap:4px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:4px">
+            <span style="padding:4px 8px;border-radius:6px;font-size:0.75rem">🎒 小學</span>
+            <span style="padding:4px 8px;border-radius:6px;font-size:0.75rem;background:var(--accent);color:#fff">🎓 中學</span>
+            <span style="padding:4px 8px;border-radius:6px;font-size:0.75rem">💼 上班</span>
+          </div>
+          <div style="background:var(--accent);color:#fff;padding:8px 20px;border-radius:8px;font-size:0.85rem;text-align:center;flex:1">🔍 解讀選中的段落</div>
+        </div>
+      </div>
+
+      <!-- Right Column -->
+      <div style="flex:1;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:10px">
+        <div style="font-size:0.75rem;color:var(--text-secondary)">✨ 白話解讀結果</div>
+
+        <div style="background:rgba(0,0,0,0.03);border-radius:8px;padding:10px;font-size:0.8rem">
+          <strong>📌 呢段主要講緊咩</strong><br>
+          呢段係講緊 AI 技術近年進步得好快，深度學習變得愈來愈大愈複雜。
+        </div>
+
+        <div style="background:rgba(0,0,0,0.03);border-radius:8px;padding:10px;font-size:0.8rem">
+          <strong>💬 逐點解釋</strong><br>
+          • AI = 人工智能，即係教電腦好似人咁諗嘢<br>
+          • 深度學習 = 用好多層嘅數學模型去學嘢<br>
+          • 規模 = 模型有幾大，參數有幾多
+        </div>
+
+        <div style="background:rgba(0,0,0,0.03);border-radius:8px;padding:10px;font-size:0.8rem">
+          <strong>🧸 打個比喻</strong><br>
+          深度學習模型就好似一個學生，以前讀緊小學課本，而家讀緊大學課本 — 本書厚咗好多，需要嘅腦力都多咗好多。
+        </div>
+
+        <div style="background:rgba(0,113,227,0.08);border-radius:8px;padding:10px;font-size:0.8rem">
+          <strong>✅ 總之一句</strong><br>
+          AI 呢幾年大躍進，模型愈嚟愈勁，但代價係要用更多電腦資源去訓練。
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="section" style="margin-top:20px">
+  <h3>使用流程</h3>
+  <p style="font-size:0.9rem;color:var(--text-secondary)">
+    ① 上傳 PDF 或貼 URL → ② 左欄自動顯示原文（分好段落）→ ③ 點選想理解的段落 → ④ 選難度 → ⑤ 按「解讀」→ ⑥ 右欄出結果
+  </p>
+</div>
+
+<div class="section">
+  <h3>關於 PDF / URL 的提醒</h3>
+  <p style="font-size:0.9rem;color:var(--text-secondary)">
+    PDF 解析和 URL 擷取會增加不少技術複雜度。第一版可以先用「直接貼文字」+「手動分段」，等工具順手了再加 PDF/URL 功能。你覺得呢？
+  </p>
+</div>
