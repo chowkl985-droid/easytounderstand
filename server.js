@@ -71,7 +71,8 @@ app.get('/api/providers', (req, res) => {
     costPer1MInput: p.costPer1MInput,
     costPer1MOutput: p.costPer1MOutput,
     currency: p.currency,
-    desc: p.desc
+    desc: p.desc,
+    descEn: p.descEn
   }));
   res.json(list);
 });

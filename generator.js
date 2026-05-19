@@ -12,6 +12,7 @@ const PROVIDERS = {
     costPer1MOutput: 0.28,
     currency: 'USD',
     desc: '最平 · 粵語自然 · 中文介面',
+    descEn: 'Cheapest · Natural Cantonese · Chinese UI',
     header: (key) => ({ 'Authorization': 'Bearer ' + key, 'Content-Type': 'application/json' }),
     body: (model, messages) => JSON.stringify({ model, messages, temperature: 0.7, max_tokens: 2000 })
   },
@@ -23,6 +24,7 @@ const PROVIDERS = {
     costPer1MOutput: 10.00,
     currency: 'USD',
     desc: '品質最高 · 理解力最強',
+    descEn: 'Highest quality · Best comprehension',
     header: (key) => ({ 'Authorization': 'Bearer ' + key, 'Content-Type': 'application/json' }),
     body: (model, messages) => JSON.stringify({ model, messages, temperature: 0.7, max_tokens: 2000 })
   },
@@ -34,6 +36,7 @@ const PROVIDERS = {
     costPer1MOutput: 15.00,
     currency: 'USD',
     desc: '解釋力最強 · 最識教人',
+    descEn: 'Best explanations · Most educational',
     header: (key) => ({ 'x-api-key': key, 'Content-Type': 'application/json', 'anthropic-version': '2023-06-01' }),
     body: (model, messages) => {
       const systemMsg = messages.find(m => m.role === 'system');
@@ -53,6 +56,7 @@ const PROVIDERS = {
     costPer1MOutput: 0,
     currency: 'USD',
     desc: '免費入門 · 日常夠用',
+    descEn: 'Free tier · Good for daily use',
     header: (key) => ({ 'Content-Type': 'application/json' }),
     body: (model, messages) => {
       const fullText = messages.map(m => m.content).join('\n\n');

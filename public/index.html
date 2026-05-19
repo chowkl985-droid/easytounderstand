@@ -395,13 +395,23 @@ function saveConfig() {
 
 function loadProviders() {
   fetch('/api/providers').then(function(r) { return r.json(); }).then(function(providers) {
+    providerSelect.innerHTML = '';
     providers.forEach(function(p) {
       var opt = document.createElement('option');
       opt.value = p.id;
-      opt.textContent = p.name + ' — ' + p.desc;
+      opt.textContent = p.name + ' — ' + ((state.language === 'en' && p.descEn) ? p.descEn : p.desc);
       providerSelect.appendChild(opt);
     });
     if (state.provider) { providerSelect.value = state.provider; updateProviderInfo(); }
+  });
+}
+
+function refreshProviderOptions() {
+  fetch('/api/providers').then(function(r) { return r.json(); }).then(function(providers) {
+    providers.forEach(function(p) {
+      var opt = providerSelect.querySelector('option[value="' + p.id + '"]');
+      if (opt) opt.textContent = p.name + ' — ' + ((state.language === 'en' && p.descEn) ? p.descEn : p.desc);
+    });
   });
 }
 
@@ -703,6 +713,7 @@ function applyLanguage(lang) {
   // Refresh dynamic text
   if (textInput.value.trim()) updateMeta();
   updateProviderInfo();
+  refreshProviderOptions();
 }
 
 // === Onboarding ===
