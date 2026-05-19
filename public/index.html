@@ -681,7 +681,8 @@ function initLanguage() {
 }
 
 function toggleLanguage() {
-  var next = state.language === 'zh' ? 'en' : 'zh';
+  var nextMap = { 'zh': 'zh-cn', 'zh-cn': 'en', 'en': 'zh' };
+  var next = nextMap[state.language] || 'zh';
   state.language = next;
   localStorage.setItem('ez-lang', next);
   applyLanguage(next);
@@ -690,7 +691,8 @@ function toggleLanguage() {
 }
 
 function applyLanguage(lang) {
-  $('langToggle').textContent = lang === 'zh' ? 'EN' : '中文';
+  var labels = { 'zh': 'EN', 'zh-cn': '粵', 'en': '普' };
+  $('langToggle').textContent = labels[lang] || 'EN';
 
   // All elements with data-en
   document.querySelectorAll('[data-en]').forEach(function(el) {
