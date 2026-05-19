@@ -299,5 +299,373 @@ body {
 
 </main>
 
+<script>
+// === State ===
+var state = {
+  provider: 'deepseek',
+  apiKey: '',
+  difficulty: 'secondary',
+  selectedParagraph: -1,
+  paragraphs: [],
+  configured: false
+};
+
+// === DOM Refs ===
+var $ = function(id) { return document.getElementById(id); };
+var textInput = $('textInput');
+var paragraphsContainer = $('paragraphsContainer');
+var inputMeta = $('inputMeta');
+var explainBtn = $('explainBtn');
+var outputPlaceholder = $('outputPlaceholder');
+var outputLoading = $('outputLoading');
+var outputContent = $('outputContent');
+var settingsModal = $('settingsModal');
+var onboardOverlay = $('onboardOverlay');
+var providerSelect = $('providerSelect');
+var providerInfo = $('providerInfo');
+var apiKeyInput = $('apiKeyInput');
+var testResult = $('testResult');
+var saveToast = $('saveToast');
+var loadingText = $('loadingText');
+
+// === Init ===
+function init() {
+  loadConfigFromServer();
+  loadProviders();
+  textInput.addEventListener('input', onTextInput);
+  $('pasteBtn').addEventListener('click', pasteFromClipboard);
+  $('clearBtn').addEventListener('click', clearAll);
+  $('sampleBtn').addEventListener('click', loadSample);
+  $('explainBtn').addEventListener('click', doExplain);
+  $('settingsBtn').addEventListener('click', function() { settingsModal.classList.add('show'); });
+  $('closeSettings').addEventListener('click', function() { settingsModal.classList.remove('show'); });
+  $('testConnBtn').addEventListener('click', testConnection);
+  $('saveConfigBtn').addEventListener('click', saveConfig);
+  $('themeToggle').addEventListener('click', toggleTheme);
+  $('onboardNext').addEventListener('click', onboardNext);
+  providerSelect.addEventListener('change', onProviderChange);
+  document.querySelectorAll('.diff-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.diff-btn').forEach(function(b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      state.difficulty = btn.dataset.level;
+    });
+  });
+  initTheme();
+}
+
+// === Config ===
+function loadConfigFromServer() {
+  fetch('/api/config').then(function(r) { return r.json(); }).then(function(c) {
+    if (c.configured) {
+      state.provider = c.provider;
+      state.apiKey = '';
+      var saved = localStorage.getItem('ez-api-key');
+      if (saved) state.apiKey = saved;
+      state.configured = true;
+      providerSelect.value = c.provider;
+      updateProviderInfo();
+      $('onboardOverlay').classList.remove('show');
+    } else {
+      $('onboardOverlay').classList.add('show');
+    }
+  });
+}
+
+function saveConfig() {
+  var provider = providerSelect.value;
+  var apiKey = apiKeyInput.value.trim();
+  if (!apiKey) return;
+  state.provider = provider;
+  state.apiKey = apiKey;
+  state.configured = true;
+  localStorage.setItem('ez-api-key', apiKey);
+  fetch('/api/config', {
+    method: 'POST', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({provider:provider, apiKey:apiKey})
+  }).then(function(r) { return r.json(); }).then(function() {
+    saveToast.classList.add('show');
+    setTimeout(function() { saveToast.classList.remove('show'); settingsModal.classList.remove('show'); }, 1200);
+  });
+}
+
+function loadProviders() {
+  fetch('/api/providers').then(function(r) { return r.json(); }).then(function(providers) {
+    providers.forEach(function(p) {
+      var opt = document.createElement('option');
+      opt.value = p.id;
+      opt.textContent = p.name + ' — ' + p.desc;
+      providerSelect.appendChild(opt);
+    });
+    if (state.provider) { providerSelect.value = state.provider; updateProviderInfo(); }
+  });
+}
+
+function onProviderChange() {
+  state.provider = providerSelect.value;
+  updateProviderInfo();
+  if (textInput.value.trim()) updateMeta();
+}
+
+function updateProviderInfo() {
+  fetch('/api/providers').then(function(r) { return r.json(); }).then(function(providers) {
+    var p = providers.find(function(x) { return x.id === providerSelect.value; });
+    if (p) {
+      providerInfo.innerHTML = '💰 入: $' + p.costPer1MInput + '/百萬 token · 出: $' + p.costPer1MOutput + '/百萬 token · ' + p.currency;
+    }
+  });
+}
+
+function testConnection() {
+  var provider = providerSelect.value;
+  var apiKey = apiKeyInput.value.trim();
+  if (!apiKey) { testResult.textContent = '請先輸入 API key'; testResult.className = 'form-hint error'; return; }
+  testResult.textContent = '測試緊...'; testResult.className = 'form-hint';
+  fetch('/api/test-connection', {
+    method: 'POST', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({provider:provider, apiKey:apiKey})
+  }).then(function(r) { return r.json(); }).then(function(data) {
+    if (data.ok) { testResult.textContent = '連線成功 ✅'; testResult.className = 'form-hint success'; }
+    else if (data.error === 'auth_error') { testResult.textContent = 'Key 似乎有問題，檢查下啦～ 🔑'; testResult.className = 'form-hint error'; }
+    else { testResult.textContent = '連線失敗：' + (data.error || 'unknown'); testResult.className = 'form-hint error'; }
+  }).catch(function() {
+    testResult.textContent = '連唔到去 AI 伺服器，檢查下網絡啦 🌐';
+    testResult.className = 'form-hint error';
+  });
+}
+
+// === Text Input ===
+function onTextInput() {
+  var text = textInput.value.trim();
+  if (!text) { paragraphsContainer.innerHTML = ''; inputMeta.innerHTML = ''; explainBtn.disabled = true; return; }
+  state.paragraphs = text.split(/\n\n+/).filter(function(p) { return p.trim(); });
+  renderParagraphs();
+  updateMeta();
+}
+
+function renderParagraphs() {
+  paragraphsContainer.innerHTML = state.paragraphs.map(function(p, i) {
+    return '<div class="para-item' + (i === state.selectedParagraph ? ' selected' : '') + '" data-index="' + i + '">' +
+      '<span class="para-num">段' + (i + 1) + '</span>' + escapeHtml(p.slice(0, 200)) + (p.length > 200 ? '...' : '') +
+    '</div>';
+  }).join('');
+  Array.from(paragraphsContainer.children).forEach(function(el) {
+    el.addEventListener('click', function() {
+      var idx = parseInt(el.dataset.index);
+      state.selectedParagraph = idx;
+      renderParagraphs();
+      explainBtn.disabled = false;
+    });
+  });
+}
+
+function updateMeta() {
+  var text = textInput.value;
+  var chars = text.length;
+  var html = chars + ' 字';
+  if (chars > 0 && state.provider) {
+    fetch('/api/estimate', {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({textLength:chars, provider:state.provider})
+    }).then(function(r) { return r.json(); }).then(function(e) {
+      inputMeta.innerHTML = chars + ' 字 · 約 ' + e.inputTokens + ' tokens · 估費用 ~$' + e.estimatedUSD.toFixed(4) + ' ' + e.currency;
+    });
+  } else {
+    inputMeta.innerHTML = html;
+  }
+}
+
+function pasteFromClipboard() {
+  navigator.clipboard.readText().then(function(t) {
+    textInput.value = t; onTextInput();
+  }).catch(function() {
+    textInput.focus();
+  });
+}
+
+function clearAll() {
+  textInput.value = '';
+  state.paragraphs = []; state.selectedParagraph = -1;
+  paragraphsContainer.innerHTML = '';
+  inputMeta.innerHTML = '';
+  explainBtn.disabled = true;
+  outputPlaceholder.style.display = 'flex';
+  outputLoading.style.display = 'none';
+  outputContent.style.display = 'none';
+}
+
+// === Sample Texts ===
+var samples = [
+  '大型語言模型（Large Language Model, LLM）透過自注意力機制（Self-Attention Mechanism）捕捉長距離語境依賴關係，並利用多層 Transformer 架構進行表徵學習。在預訓練階段，模型以大規模語料庫進行自監督學習，透過預測下一個 Token 的方式逐步最佳化參數。隨後透過指令微調（Instruction Tuning）與 RLHF（Reinforcement Learning from Human Feedback）使模型對齊人類偏好，實現卓越的自然語言理解與生成能力。',
+
+  '量子計算（Quantum Computing）利用量子疊加（Superposition）與量子糾纏（Entanglement）等量子力學基本原理來處理資訊。與傳統計算機使用 0 或 1 的位元不同，量子位元（Qubit）可以同時處於 0 和 1 的疊加態，使量子計算機能夠並行處理極大量的可能性。Shor 演算法展示了量子計算在破解 RSA 加密上的潛在優勢，而 Grover 演算法則能在無序資料庫中實現二次加速搜尋。',
+
+  '區塊鏈技術本質上是一種去中心化的分散式帳本（Distributed Ledger），透過共識機制（Consensus Mechanism）如工作量證明（Proof of Work）或權益證明（Proof of Stake）來確保資料不可篡改性。智能合約（Smart Contract）則是運行在區塊鏈上的自動化程式，當預設條件被觸發時自動執行合約條款。DeFi（去中心化金融）利用這些技術建立無需中介的金融服務生態，包括借貸、交易與流動性挖礦等應用。'
+];
+
+function loadSample() {
+  var sample = samples[Math.floor(Math.random() * samples.length)];
+  textInput.value = sample;
+  onTextInput();
+}
+
+// === Explain ===
+var explainCooldown = false;
+
+function doExplain() {
+  if (explainCooldown) return;
+  if (!state.configured || !state.apiKey) {
+    settingsModal.classList.add('show'); return;
+  }
+  if (state.selectedParagraph < 0 || state.selectedParagraph >= state.paragraphs.length) return;
+
+  var text = state.paragraphs[state.selectedParagraph];
+  explainCooldown = true;
+  setTimeout(function() { explainCooldown = false; }, 2000);
+
+  // Show loading
+  outputPlaceholder.style.display = 'none';
+  outputContent.style.display = 'none';
+  outputLoading.style.display = 'flex';
+  var diffTexts = { elementary: 'AI 老師而家用故事書方式講緊畀你聽哦～ 📖', secondary: 'AI 正在用白話幫你翻譯緊...', 'working-adult': 'AI 顧問幫你分析緊重點... 💼' };
+  loadingText.textContent = diffTexts[state.difficulty] || 'AI 正在用白話幫你翻譯緊...';
+
+  fetch('/api/explain', {
+    method: 'POST', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({
+      text: text, difficulty: state.difficulty,
+      provider: state.provider, apiKey: state.apiKey
+    })
+  }).then(function(r) { return r.json(); }).then(function(data) {
+    outputLoading.style.display = 'none';
+    if (data.error) {
+      showError(data.error);
+    } else {
+      showResult(data.result);
+    }
+  }).catch(function() {
+    outputLoading.style.display = 'none';
+    showError('unknown');
+  });
+}
+
+function showError(code) {
+  var messages = {
+    auth_error: 'Key 似乎有問題，檢查下啦～ 🔑',
+    quota_exceeded: '今個月嘅用量爆咗啦！去平台入錢啦 💰',
+    content_too_long: '呢篇嘢太長啦，試下逐段解讀～ 📏',
+    unknown: '唔知發生咩事，再試一次啦 🥲'
+  };
+  outputContent.innerHTML = '<div class="output-section"><p>' + (messages[code] || messages.unknown) + '</p></div>';
+  outputContent.style.display = 'flex';
+}
+
+function showResult(text) {
+  outputContent.innerHTML = '';
+  var sections = text.split(/\n(?=📌|💬|🧸|✅)/);
+  sections.forEach(function(s) {
+    s = s.trim();
+    if (!s) return;
+    var title = s.split('\n')[0];
+    var body = s.split('\n').slice(1).join('\n').trim();
+    var secDiv = document.createElement('div');
+    secDiv.className = 'output-section';
+    var h3 = document.createElement('h3');
+    h3.textContent = title;
+    var p = document.createElement('p');
+    p.textContent = body || title;
+    var copyBtn = document.createElement('button');
+    copyBtn.className = 'copy-btn';
+    copyBtn.textContent = '複製';
+    copyBtn.addEventListener('click', function() {
+      navigator.clipboard.writeText(title + '\n' + body);
+      copyBtn.textContent = '已複製!';
+      setTimeout(function() { copyBtn.textContent = '複製'; }, 1500);
+    });
+    secDiv.appendChild(h3);
+    secDiv.appendChild(p);
+    secDiv.appendChild(copyBtn);
+    outputContent.appendChild(secDiv);
+  });
+
+  // Action buttons
+  var actionsDiv = document.createElement('div');
+  actionsDiv.className = 'output-actions';
+  var copyAllBtn = document.createElement('button');
+  copyAllBtn.className = 'btn-secondary';
+  copyAllBtn.textContent = '📋 複製全部';
+  copyAllBtn.addEventListener('click', function() {
+    navigator.clipboard.writeText(text);
+    copyAllBtn.textContent = '已複製!';
+    setTimeout(function() { copyAllBtn.textContent = '📋 複製全部'; }, 1500);
+  });
+  var regenBtn = document.createElement('button');
+  regenBtn.className = 'btn-secondary';
+  regenBtn.textContent = '🔄 重新生成';
+  regenBtn.addEventListener('click', doExplain);
+
+  actionsDiv.appendChild(copyAllBtn);
+  actionsDiv.appendChild(regenBtn);
+  outputContent.appendChild(actionsDiv);
+
+  // Feedback
+  var feedbackDiv = document.createElement('div');
+  feedbackDiv.className = 'feedback-row';
+  feedbackDiv.innerHTML = '<span>呢個解釋點樣？</span>';
+  var thumbsUp = document.createElement('button');
+  thumbsUp.textContent = '👍';
+  thumbsUp.addEventListener('click', function() { feedbackDiv.innerHTML = '<span>多謝！好開心幫到你 🎉</span>'; });
+  var thumbsDown = document.createElement('button');
+  thumbsDown.textContent = '👎';
+  thumbsDown.addEventListener('click', function() { feedbackDiv.innerHTML = '<span>收到，會繼續改進 💪</span>'; });
+  feedbackDiv.appendChild(thumbsUp);
+  feedbackDiv.appendChild(thumbsDown);
+  outputContent.appendChild(feedbackDiv);
+
+  outputContent.style.display = 'flex';
+}
+
+// === Theme ===
+function initTheme() {
+  var saved = localStorage.getItem('ez-theme');
+  if (saved) { document.documentElement.setAttribute('data-theme', saved); $('themeToggle').textContent = saved === 'dark' ? '☀️' : '🌙'; }
+  else if (window.matchMedia('(prefers-color-scheme: dark)').matches) { document.documentElement.setAttribute('data-theme', 'dark'); $('themeToggle').textContent = '☀️'; }
+}
+
+function toggleTheme() {
+  var current = document.documentElement.getAttribute('data-theme');
+  var next = current === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  $('themeToggle').textContent = next === 'dark' ? '☀️' : '🌙';
+  localStorage.setItem('ez-theme', next);
+}
+
+// === Onboarding ===
+var onboardStep = 0;
+var onboardSteps = [
+  function() { settingsModal.classList.add('show'); $('onboardTitle').textContent = '步驟 1/3：設定 API Key'; },
+  function() { settingsModal.classList.remove('show'); $('onboardTitle').textContent = '步驟 2/3：貼文字'; },
+  function() { $('onboardTitle').textContent = '步驟 3/3：揀難度 → 解讀'; }
+];
+
+function onboardNext() {
+  onboardStep++;
+  var steps = document.querySelectorAll('.onboard-step');
+  steps.forEach(function(s, i) { s.classList.toggle('active', i === onboardStep); });
+  if (onboardStep >= 3) {
+    $('onboardOverlay').classList.remove('show');
+    if (!state.configured) settingsModal.classList.add('show');
+  } else {
+    onboardSteps[onboardStep]();
+  }
+}
+
+// === Helpers ===
+function escapeHtml(str) { return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+// === Start ===
+init();
+</script>
+
 </body>
 </html>
