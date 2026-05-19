@@ -415,7 +415,9 @@ function updateProviderInfo() {
   fetch('/api/providers').then(function(r) { return r.json(); }).then(function(providers) {
     var p = providers.find(function(x) { return x.id === providerSelect.value; });
     if (p) {
-      providerInfo.innerHTML = '💰 入: $' + p.costPer1MInput + '/百萬 token · 出: $' + p.costPer1MOutput + '/百萬 token · ' + p.currency;
+      providerInfo.innerHTML = (state.language === 'en' ?
+        '💰 Input: $' + p.costPer1MInput + '/1M tokens · Output: $' + p.costPer1MOutput + '/1M tokens · ' + p.currency :
+        '💰 入: $' + p.costPer1MInput + '/百萬 token · 出: $' + p.costPer1MOutput + '/百萬 token · ' + p.currency);
     }
   });
 }
@@ -466,13 +468,14 @@ function renderParagraphs() {
 function updateMeta() {
   var text = textInput.value;
   var chars = text.length;
-  var html = chars + ' 字';
+  var isEn = state.language === 'en';
+  var html = chars + (isEn ? ' chars' : ' 字');
   if (chars > 0 && state.provider) {
     fetch('/api/estimate', {
       method: 'POST', headers: {'Content-Type':'application/json'},
       body: JSON.stringify({textLength:chars, provider:state.provider})
     }).then(function(r) { return r.json(); }).then(function(e) {
-      inputMeta.innerHTML = chars + ' 字 · 約 ' + e.inputTokens + ' tokens · 估費用 ~$' + e.estimatedUSD.toFixed(4) + ' ' + e.currency;
+      inputMeta.innerHTML = chars + (isEn ? ' chars · ~' : ' 字 · 約 ') + e.inputTokens + ' tokens · ' + (isEn ? 'Est. cost ~$' : '估費用 ~$') + e.estimatedUSD.toFixed(4) + ' ' + e.currency;
     });
   } else {
     inputMeta.innerHTML = html;
@@ -687,6 +690,10 @@ function applyLanguage(lang) {
     var t = lang === 'en' ? el.getAttribute('data-en-title') : el.getAttribute('data-zh-title');
     if (t) el.title = t;
   });
+
+  // Refresh dynamic text
+  if (textInput.value.trim()) updateMeta();
+  updateProviderInfo();
 }
 
 // === Onboarding ===
