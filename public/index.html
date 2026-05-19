@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-HK" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>easytounderstand — 白話翻譯機</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='80' font-size='80'>💡</text></svg>">
+</head>
+<body>
+
+<!-- Onboarding Overlay -->
+<div class="onboard-overlay" id="onboardOverlay">
+  <div class="onboard-card">
+    <h2 id="onboardTitle">歡迎！三步開始 👋</h2>
+    <div class="onboard-steps">
+      <div class="onboard-step active" data-step="1">
+        <span class="step-num">1</span>
+        <span>設定 API Key（揀 AI + 入 key）</span>
+      </div>
+      <div class="onboard-step" data-step="2">
+        <span class="step-num">2</span>
+        <span>貼文字（貼你想理解嘅內容）</span>
+      </div>
+      <div class="onboard-step" data-step="3">
+        <span class="step-num">3</span>
+        <span>揀難度 → 解讀</span>
+      </div>
+    </div>
+    <button class="btn-primary" id="onboardNext">開始 →</button>
+  </div>
+</div>
+
+<!-- Nav -->
+<nav class="nav-bar">
+  <div class="nav-inner">
+    <span class="nav-logo">💡 easytounderstand</span>
+    <div class="nav-actions">
+      <button class="icon-btn" id="settingsBtn" title="API 設定">⚙️</button>
+      <button class="icon-btn" id="themeToggle" title="深淺色切換">🌙</button>
+    </div>
+  </div>
+</nav>
+
+<!-- API Settings Modal -->
+<div class="modal-overlay" id="settingsModal">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h3>⚙️ API 設定</h3>
+      <button class="close-btn" id="closeSettings">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>AI 引擎</label>
+        <select id="providerSelect"></select>
+      </div>
+      <div class="form-group" id="providerInfo"></div>
+      <div class="form-group">
+        <label>API Key</label>
+        <div class="key-row">
+          <input type="password" id="apiKeyInput" placeholder="貼上你嘅 API key...">
+          <button class="btn-secondary btn-sm" id="testConnBtn">測試連線</button>
+        </div>
+        <span class="form-hint" id="testResult"></span>
+      </div>
+      <div class="form-group">
+        <button class="btn-primary" id="saveConfigBtn">儲存設定</button>
+        <span class="save-toast" id="saveToast">已儲存 ✅</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Main Content -->
+<main class="main-container">
+
+  <!-- Left Column -->
+  <section class="panel panel-left">
+    <div class="panel-header">
+      <h2>📝 原文</h2>
+      <div class="panel-header-actions">
+        <button class="btn-sm" id="pasteBtn">📎 貼上</button>
+        <button class="btn-sm" id="clearBtn">🗑 清除</button>
+      </div>
+    </div>
+    <textarea id="textInput" class="text-input" placeholder="喺度貼你想理解嘅文字..."></textarea>
+    <div class="input-meta" id="inputMeta"></div>
+    <button class="btn-sm btn-outline" id="sampleBtn">💡 試下範例文字</button>
+
+    <div class="paragraphs-container" id="paragraphsContainer"></div>
+
+    <div class="action-bar" id="actionBar">
+      <div class="difficulty-selector" id="difficultySelector">
+        <button class="diff-btn" data-level="elementary">🎒 小學</button>
+        <button class="diff-btn active" data-level="secondary">🎓 中學</button>
+        <button class="diff-btn" data-level="working-adult">💼 上班</button>
+      </div>
+      <button class="btn-primary btn-explain" id="explainBtn" disabled>🔍 解讀選中嘅段落</button>
+    </div>
+  </section>
+
+  <!-- Right Column -->
+  <section class="panel panel-right">
+    <div class="panel-header">
+      <h2>✨ 白話解讀</h2>
+    </div>
+    <div class="output-area" id="outputArea">
+      <div class="output-placeholder" id="outputPlaceholder">
+        <p>👈 喺左邊貼文字，</p>
+        <p>選擇段落，</p>
+        <p>然後按「解讀」</p>
+      </div>
+      <div class="output-loading" id="outputLoading">
+        <div class="spinner"></div>
+        <p id="loadingText">AI 正在用白話幫你翻譯緊...</p>
+      </div>
+      <div class="output-content" id="outputContent"></div>
+    </div>
+  </section>
+
+</main>
+
+</body>
+</html>
