@@ -93,7 +93,9 @@ async function callAI(providerId, apiKey, text, difficulty, language) {
   const prompt = buildPrompt(text, difficulty, language);
   const sysMsg = (language === 'en')
     ? 'You are a helpful explanation tool. Follow the format exactly.'
-    : '你係一個翻譯同解釋工具。跟住格式輸出。';
+    : (language === 'zh-cn')
+      ? '你是一个翻译和解释工具。按照格式输出。'
+      : '你係一個翻譯同解釋工具。跟住格式輸出。';
   const messages = [
     { role: 'system', content: sysMsg },
     { role: 'user', content: prompt }
