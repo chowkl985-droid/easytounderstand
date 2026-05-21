@@ -243,7 +243,7 @@ function updatePdfUsageUI() {
   var isEn = state.language === 'en';
   var isCn = state.language === 'zh-cn';
   if (remaining <= 0) {
-    $('usagePdfCounter').innerHTML = (isEn ? '<span style="color:#ff3b30;">0/' + PDF_LIMIT + ' uses left today. <span style="cursor:pointer;text-decoration:underline;color:var(--accent);" onclick="alert(\'Upgrade to Pro! $39 USD one-time. Coming soon!\')">Upgrade to Pro →</span>' : (isCn ? '<span style="color:#ff3b30;">0/' + PDF_LIMIT + ' 次。 <span style="cursor:pointer;text-decoration:underline;color:var(--accent);" onclick="alert(\'升级到 Pro！$39 USD 一次买断。即将推出！\')">升级到 Pro →</span>' : '<span style="color:#ff3b30;">0/' + PDF_LIMIT + ' 次。<span style="cursor:pointer;text-decoration:underline;color:var(--accent);" onclick="alert(\'升級到 Pro！$39 USD 一次買斷。即將推出！\')">升級到 Pro →</span>'));
+    $('usagePdfCounter').innerHTML = (isEn ? '<span style="color:#ff3b30;">0/' + PDF_LIMIT + ' uses left today. <span style="cursor:pointer;text-decoration:underline;color:var(--accent);" onclick="window.open(\'https://chowkl.gumroad.com/l/MakeItSimple\',\'_blank\')">Upgrade to Pro →</span>' : (isCn ? '<span style="color:#ff3b30;">0/' + PDF_LIMIT + ' 次。 <span style="cursor:pointer;text-decoration:underline;color:var(--accent);" onclick="window.open(\'https://chowkl.gumroad.com/l/MakeItSimple\',\'_blank\')">升级到 Pro →</span>' : '<span style="color:#ff3b30;">0/' + PDF_LIMIT + ' 次。<span style="cursor:pointer;text-decoration:underline;color:var(--accent);" onclick="window.open(\'https://chowkl.gumroad.com/l/MakeItSimple\',\'_blank\')">升級到 Pro →</span>'));
     $('explainPdfBtn').disabled = true;
   } else {
     $('usagePdfCounter').innerHTML = (isEn ? 'PDF: <strong>' + remaining + '</strong>/' + PDF_LIMIT + ' free today' : (isCn ? 'PDF：<strong>' + remaining + '</strong>/' + PDF_LIMIT + ' 次免费' : 'PDF：<strong>' + remaining + '</strong>/' + PDF_LIMIT + ' 次免費'));
@@ -436,7 +436,7 @@ async function loadPDF(file) {
 }
 
 function doExplainPdf() {
-  if (getPdfRemaining() <= 0) { alert('今日PDF次數已用完。升級到 Pro 無限使用！'); return; }
+  if (getPdfRemaining() <= 0) { if (confirm((state.language==='en'?'Daily limit reached. Buy Pro?':state.language==='zh-cn'?'今日次数已用完。去买 Pro？':'今日次數已用完。去買 Pro？'))) window.open('https://chowkl.gumroad.com/l/MakeItSimple','_blank'); return; }
   if (!state.selectedText) return;
   if (!state.configured || !state.apiKey) {
     var alerts = { en: 'Please set your API Key first (click ⚙️ on the main page)', zh: '請先設定 API Key（去主頁面 ⚙️ 設定）', 'zh-cn': '请先设置 API Key（去主页面 ⚙️ 设置）' };

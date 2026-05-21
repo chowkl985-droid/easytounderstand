@@ -411,7 +411,7 @@ function updateUsageUI() {
   var isEn = state.language === 'en';
   var isCn = state.language === 'zh-cn';
   if (remaining <= 0) {
-    usageCounter.innerHTML = (isEn ? 'No uses left today. <span class="upgrade-link" onclick="alert(\'Upgrade to Pro! $39 USD one-time, unlimited use. Coming soon!\')">Upgrade to Pro →</span>' : (isCn ? '今天次数用完了。<span class="upgrade-link" onclick="alert(\'升级到 Pro！$39 USD 一次买断，无限使用。即将推出！\')">升级到 Pro →</span>' : '今日次數用完了。<span class="upgrade-link" onclick="alert(\'升級到 Pro！$39 USD 一次買斷，無限使用。即將推出！\')">升級到 Pro →</span>'));
+    usageCounter.innerHTML = (isEn ? 'No uses left today. <span class="upgrade-link" onclick="window.open(\'https://chowkl.gumroad.com/l/MakeItSimple\',\'_blank\')">Upgrade to Pro →</span>' : (isCn ? '今天次数用完了。<span class="upgrade-link" onclick="window.open(\'https://chowkl.gumroad.com/l/MakeItSimple\',\'_blank\')">升级到 Pro →</span>' : '今日次數用完了。<span class="upgrade-link" onclick="window.open(\'https://chowkl.gumroad.com/l/MakeItSimple\',\'_blank\')">升級到 Pro →</span>'));
     explainBtn.disabled = true;
   } else {
     usageCounter.innerHTML = (isEn ? '<span class="remaining">' + remaining + '</span>/' + DAILY_LIMIT + ' uses left today' : (isCn ? '今日剩余 <span class="remaining">' + remaining + '</span>/' + DAILY_LIMIT + ' 次' : '今日剩餘 <span class="remaining">' + remaining + '</span>/' + DAILY_LIMIT + ' 次'));
@@ -682,7 +682,7 @@ function doExplain() {
     outputPlaceholder.style.display = 'none';
     outputLoading.style.display = 'none';
     outputContent.style.display = 'flex';
-    outputContent.innerHTML = '<div class="output-section"><p style="text-align:center;">' + (state.language === 'en' ? 'Daily limit reached. <br>Upgrade to Pro for unlimited use!' : (state.language === 'zh-cn' ? '今日次数已用完。<br>升级到 Pro 无限使用！' : '今日次數已用完。<br>升級到 Pro 無限使用！')) + '</p></div>';
+    outputContent.innerHTML = '<div class="output-section"><p style="text-align:center;">' + (state.language === 'en' ? 'Daily limit reached.<br><a href="https://chowkl.gumroad.com/l/MakeItSimple" target="_blank" style="color:var(--accent);font-weight:600;">Upgrade to Pro →</a>' : (state.language === 'zh-cn' ? '今日次数已用完。<br><a href="https://chowkl.gumroad.com/l/MakeItSimple" target="_blank" style="color:var(--accent);font-weight:600;">升级到 Pro →</a>' : '今日次數已用完。<br><a href="https://chowkl.gumroad.com/l/MakeItSimple" target="_blank" style="color:var(--accent);font-weight:600;">升級到 Pro →</a>')) + '</p></div>';
     updateUsageUI();
     return;
   }
