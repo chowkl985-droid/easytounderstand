@@ -1,70 +1,80 @@
 # 講人話 / MakeItSimple — 產品文案
 
 ## Tagline
-- **粵語：** 任何語言文件，用你最熟嘅語言講人話。
-- **普通話：** 任何语言文件，用你最熟悉的语言讲人话。
-- **English：** Any language, explained in yours.
+
+| 語言 | |
+|------|------|
+| 粵語 | 咩文都好，用人話講返你聽 |
+| 普通話 | 什么内容都行，用人话讲给你听 |
+| English | Any language, explained in yours. |
 
 ---
 
-## 產品介紹短文
+## 1. Gumroad 銷售頁（長文）
 
-**粵語：**
-講人話係一個專為普通人設計嘅 AI 白話翻譯機。無論係英文論文、中文報告，還是 PDF 文件，你只要貼上或上載，它就會自動分段，用小學、中學或上班族難度，幫你用最熟悉嘅語言（粵語、普通話或 English）重新解釋。免費用戶每日可使用 10 次文字 + 3 次 PDF；升級 Pro（$39 一次買斷）即可無限使用。支援 7 大 AI 模型 + 自訂 API，真正做到「任何語言文件，用你最熟嘅語言講人話」。
+### 開場（故事感）
 
-**普通話：**
-讲人话是一个专为普通人设计的 AI 白话翻译机。无论是英文论文、中文报告，还是 PDF 文件，只需粘贴或上传，它就会自动分段，用小学、中学或上班族难度，帮你用最熟悉的语言（粤语、普通话或 English）重新解释。免费用户每日可使用 10 次文字 + 3 次 PDF；升级 Pro（$39 一次买断）即可无限使用。支持 7 大 AI 模型 + 自定义 API，真正做到"任何语言文件，用你最熟悉的语言讲人话"。
+你試過嗎？打開一篇英文論文、一份政策文件、一頁合同 — 每個字都識，但砌埋一齊完全唔知佢講咩。
 
-**English：**
-MakeItSimple is an AI plain language translator that helps you understand any document in the language you're most comfortable with. Whether it's an English paper, Chinese report, or PDF file — just paste or upload it, select a paragraph, and choose your difficulty level (Kid / Teen / Working Adult). It rewrites complex content with clear summaries, breakdowns, examples, and takeaways. Free: 10 text + 3 PDF uses per day. Pro: $39 one-time for unlimited access.
+**講人話**就係為咗呢個問題而生。
+
+### 功能
+
+貼上任何文字或上載 PDF → 自動分段 → 揀難度 → AI 用你最熟嘅語言（粵語、普通話或 English）重新解釋畀你聽。
+
+三種難度：
+- 🎒 **小學** — 用故事同比喻，小學生都聽得明
+- 🎓 **中學** — 用日常白話，輕鬆傾偈咁解釋
+- 💼 **上班族** — 直接講重點，幫你快速分析同總結
+
+### 跨語言能力
+
+英文原文 → 廣東話解釋。中文文件 → 英文解釋。你睇得明先係最重要。
+
+### 支援 7 大 AI 引擎
+
+DeepSeek / GPT-4o / Claude / Gemini / Grok / Qwen / 自訂 API — 你揀邊個都得，用自己嘅 API key。
+
+### 定價
+
+| 方案 | 內容 |
+|------|------|
+| **免費** | 每日 10 次文字 + 3 次 PDF（自備 API key） |
+| **Pro — $39 USD** | 一次買斷，永久無限使用文字 + PDF |
+
+**$39 一次 vs ChatGPT $20/月 = 兩個月就回本，之後全部免費。**
+
+唔使月費，唔使訂閱。買一次，用一世。
+
+### CTA
+
+[Buy Now — $39 Lifetime Access]
 
 ---
 
-## 5 大賣點
+## 2. Product Hunt（短文）
 
-**粵語：**
-1. 🌍 跨語言解讀：中文用戶睇英文文件、英文用戶睇中文文件，都可以用自己最熟嘅語言（粵語/普通話/English）理解
-2. 📄 支援文字貼上 + PDF 上載解讀，超方便
-3. 🎒🎓💼 三種難度任選：小學 / 中學 / 上班族
-4. 🆓 免費用戶每日 10 次文字 + 3 次 PDF
-5. 💰 Pro 版 $39 一次買斷 → 文字 + PDF 完全無限，支援 7 大 AI + 自訂 API
+**Tagline:** Any language, explained in yours.
 
-**普通話：**
-1. 🌍 跨语言解读：中文用户看英文文件、英文用户看中文文件，都可以用自己最熟悉的语言轻松理解
-2. 📄 支持文字粘贴 + PDF 上传解读
-3. 🎒🎓💼 三种难度可选：小学 / 中学 / 上班族
-4. 🆓 免费用户每日 10 次文字 + 3 次 PDF
-5. 💰 Pro 版 $39 一次买断 → 文字 + PDF 完全无限，支持 7 大 AI + 自定义 API
+**Description:**
+Paste text or upload a PDF. Pick Kid, Teen, or Working Adult difficulty. AI rewrites it in plain language — in Cantonese, Mandarin, or English. Supports DeepSeek, GPT-4o, Claude, Gemini, Grok, Qwen + custom APIs. Free tier available. Pro: $39 one-time, unlimited forever.
 
-**English：**
-1. 🌍 Cross-language Understanding — Read English documents in Chinese, or Chinese documents in English. Get explanations in the language you prefer.
-2. 📄 Paste text or upload PDFs for instant breakdown
-3. 🎒🎓💼 Three difficulty levels: Kid / Teen / Working Adult
-4. 🆓 Free plan: 10 text + 3 PDF uses per day
-5. 💰 Pro: $39 one-time — Unlimited usage, 7 AI models + custom API
+**Bullet Points:**
+- Cross-language: read English docs, get explanations in Cantonese/Mandarin/English
+- Paste text or upload PDF
+- 3 difficulty levels (Kid / Teen / Working Adult)
+- 7 AI engines + bring your own API key
+- Free: 10 text + 3 PDF/day. Pro: $39 one-time, unlimited.
 
 ---
 
-## Gumroad 產品描述（英文主推）
+## 3. GitHub README（開發者向）
 
-**MakeItSimple (講人話) — Any language, explained in yours.**
+方向指引（唔係最終 README）：
 
-Tired of struggling with dense English papers, Chinese reports, contracts, or PDFs and still not understanding them?
-
-MakeItSimple is an intelligent AI translator that rewrites complex content into plain, easy-to-understand language tailored to your level and preferred language.
-
-**How it works:**
-1. Paste text or upload a PDF
-2. Select the paragraph
-3. Choose difficulty (Kid / Teen / Working Adult)
-4. Get clear explanations with summary, breakdown, real-life examples, and a powerful takeaway
-
-**Cross-language superpower:** A Hong Kong student can read an English academic paper and get the explanation in Cantonese. An English speaker can understand a Chinese policy document in plain English.
-
-**Pricing:**
-- Free Plan: 10 text uses + 3 PDF uses per day (Bring Your Own API Key)
-- Pro Plan: $39 one-time purchase — Unlimited text & PDF usage forever
-
-Supports 7 major AI models (DeepSeek, GPT-4o, Claude, Gemini, Grok, Qwen, and custom APIs). Full interface in Cantonese, Mandarin, and English. No monthly fees. Lifetime access.
-
-Perfect for students, professionals, researchers, and anyone who wants to truly understand what they're reading.
+- 一句簡介：將複雜文章用簡單白話解釋嘅 AI 工具
+- Tech stack: Node.js + Express + 多 AI 引擎
+- 安裝步驟: `npm install` → `node server.js` → 打開 `localhost:8080`
+- 支援 AI: DeepSeek, OpenAI, Claude, Gemini, Grok, Qwen, Custom
+- License: Proprietary（商業軟件）
+- Screenshot 建議：貼文字 + 解釋結果嘅對比截圖

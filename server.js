@@ -112,4 +112,7 @@ app.post('/api/explain', async (req, res) => {
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log('easytounderstand running at http://localhost:' + PORT);
+  const url = 'http://localhost:' + PORT;
+  const cmd = process.platform === 'win32' ? 'start "" "' + url + '"' : process.platform === 'darwin' ? 'open "' + url + '"' : 'xdg-open "' + url + '"';
+  require('child_process').exec(cmd);
 });

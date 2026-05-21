@@ -9,5 +9,8 @@
   "type": "commonjs",
   "dependencies": {
     "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.0"
   }
 }
