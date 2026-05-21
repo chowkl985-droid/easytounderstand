@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="zh-HK" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-en="PDF MakeItSimple" data-zh="PDF 講人話" data-zh-cn="PDF 讲人话">PDF 講人話</title>
+  <link rel="icon" href="icon128.png">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #fef9f0;
+      --surface: rgba(255,255,255,0.75);
+      --border: rgba(0,0,0,0.08);
+      --text: #1a1a1a;
+      --text-secondary: #6b6b6b;
+      --accent: #0cf6b7;
+      --accent-hover: #0ae0a5;
+      --accent-light: rgba(12,246,183,0.12);
+      --accent-border: rgba(12,246,183,0.30);
+      --radius: 16px;
+      --radius-sm: 10px;
+      --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    [data-theme="dark"] {
+      --bg: #1a1a1a;
+      --surface: rgba(255,255,255,0.05);
+      --border: rgba(255,255,255,0.10);
+      --text: #f0f0f0;
+      --text-secondary: #999;
+      --accent-light: rgba(12,246,183,0.12);
+      --accent-border: rgba(12,246,183,0.40);
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', system-ui, sans-serif;
+      background: var(--bg); color: var(--text); line-height: 1.6;
+      transition: background var(--transition), color var(--transition);
+      min-height: 100vh; margin: 0;
+    }
+
+    .nav-bar {
+      position: sticky; top: 0; z-index: 100;
+      backdrop-filter: blur(20px); background: var(--surface);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner { max-width: 1400px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; padding:12px 24px; }
+    .nav-logo { font-weight:700; font-size:1.1rem; display:flex; align-items:center; gap:8px; text-decoration:none; color:var(--text); }
+    .nav-logo span { color:var(--text); }
+    .nav-icon { width:28px; height:28px; border-radius:6px; }
+    .nav-actions { display:flex; gap:8px; align-items:center; }
+    .lang-btn {
+      background: var(--surface); border:1px solid var(--border); border-radius:6px;
+      padding:5px 10px; cursor:pointer; font-size:0.82rem; color:var(--text-secondary);
+      transition: all var(--transition); font-weight:500;
+    }
+    .lang-btn:hover { border-color:var(--accent); color:var(--accent); }
+    .lang-btn.active { background:var(--accent); color:#05262f; border-color:var(--accent); }
+
+    .main-container { display:flex; gap:16px; max-width:1400px; margin:16px auto; padding:0 16px; min-height:calc(100vh - 80px); }
+    .panel { flex:1; display:flex; flex-direction:column; }
+    .panel-left { max-width:55%; min-width:300px; }
+
+    .btn-primary {
+      background:var(--accent); color:#05262f; border:none; border-radius:50px;
+      padding:10px 22px; font-weight:600; font-size:0.9rem; cursor:pointer;
+      transition: all var(--transition);
+    }
+    .btn-primary:hover { background:var(--accent-hover); transform:translateY(-1px); }
+    .btn-primary:disabled { opacity:0.4; cursor:not-allowed; transform:none; }
+    .btn-secondary {
+      background:var(--surface); color:var(--text); border:1px solid var(--border);
+      border-radius:50px; padding:10px 22px; font-weight:600; font-size:0.9rem;
+      cursor:pointer; transition: all var(--transition);
+    }
+    .btn-secondary:hover { background:rgba(255,255,255,0.15); }
+    .btn-sm { padding:5px 12px; font-size:0.8rem; border-radius:6px; border:1px solid var(--border); background:var(--surface); color:var(--text); cursor:pointer; transition:all var(--transition); text-decoration:none; }
+    .btn-sm:hover { border-color:var(--accent); }
+
+    .upload-zone {
+      border:2px dashed var(--border); border-radius:var(--radius); padding:40px;
+      text-align:center; cursor:pointer; transition:all var(--transition);
+      background:var(--surface); margin-bottom:16px;
+    }
+    .upload-zone:hover, .upload-zone.dragover { border-color:var(--accent); background:var(--accent-light); }
+    .upload-zone input { display:none; }
+    .upload-bar { display:flex; align-items:center; justify-content:space-between; padding:10px 16px; border-radius:var(--radius); background:var(--surface); border:1px solid var(--border); margin-bottom:12px; }
+
+    .pdf-container { flex:1; overflow-y:auto; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:20px; min-height:300px; max-height:60vh; }
+    .pdf-page { margin-bottom:24px; }
+    .pdf-page h4 { font-size:0.9rem; color:var(--text-secondary); margin-bottom:6px; }
+    .pdf-page p { font-size:0.88rem; line-height:1.8; color:var(--text); margin-bottom:8px; user-select:text; cursor:text; padding:6px 8px; border-radius:4px; transition:background 0.15s; }
+    .pdf-page p:hover { background:var(--accent-light); }
+    .pdf-page p::selection { background:rgba(12,246,183,0.45); }
+
+    .difficulty-selector { display:flex; gap:4px; margin-bottom:12px; background:var(--bg); border-radius:8px; padding:4px; }
+    .diff-btn { flex:1; padding:8px 6px; border:none; border-radius:6px; background:transparent; cursor:pointer; font-size:0.8rem; color:var(--text-secondary); transition:all var(--transition); }
+    .diff-btn.active { background:var(--accent); color:#05262f; }
+
+    .output-area { flex:1; padding:20px; border-radius:var(--radius); border:1px solid var(--border); background:var(--surface); backdrop-filter:blur(10px); min-height:300px; display:flex; flex-direction:column; }
+    .output-placeholder { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; color:var(--text-secondary); font-size:0.9rem; gap:6px; }
+    .output-loading { display:none; flex-direction:column; align-items:center; justify-content:center; gap:16px; flex:1; }
+    .spinner { width:40px; height:40px; border:3px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin 0.8s linear infinite; }
+    @keyframes spin { to { transform:rotate(360deg); } }
+    .output-content { display:none; flex-direction:column; gap:16px; }
+    .output-section { padding:16px; border-radius:var(--radius-sm); background:var(--bg); position:relative; }
+    .output-section h3 { font-size:0.9rem; margin-bottom:6px; }
+    .output-section p { font-size:0.88rem; line-height:1.7; color:var(--text-secondary); }
+    .copy-btn {
+      position:absolute; top:10px; right:10px;
+      background:var(--surface); border:1px solid var(--border); border-radius:6px;
+      padding:3px 8px; font-size:0.72rem; cursor:pointer; color:var(--text-secondary);
+      transition:all var(--transition);
+    }
+    .copy-btn:hover { border-color:var(--accent); color:var(--accent); }
+
+    .selected-info {
+      margin-top:12px; padding:14px 16px; border-radius:var(--radius-sm);
+      background:var(--surface); border:1px solid var(--border);
+      font-size:0.82rem;
+    }
+    .selected-info .sel-label { font-weight:600; }
+
+    @media (max-width: 768px) {
+      .main-container { flex-direction:column; padding:8px; }
+      .panel-left { max-width:100%; }
+      .pdf-container { min-height:200px; }
+      .output-area { min-height:200px; }
+      .diff-btn { font-size:0.72rem; padding:8px 4px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="nav-bar">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo"><img src="icon128.png" class="nav-icon" alt=""> <span data-en="PDF MakeItSimple" data-zh="PDF 講人話" data-zh-cn="PDF 讲人话">PDF 講人話</span></a>
+    <div class="nav-actions">
+      <button class="lang-btn" id="langZh" title="廣東話">粵語</button>
+      <button class="lang-btn active" id="langEn" title="English">English</button>
+      <button class="lang-btn" id="langCn" title="普通話">普通話</button>
+      <button class="btn-sm" id="themeToggle">🌙</button>
+      <a href="/" class="btn-sm">← <span data-en="Back to Paste Text" data-zh="返去貼文字" data-zh-cn="返去贴文字">返去貼文字</span></a>
+    </div>
+  </div>
+</nav>
+
+<main class="main-container">
+  <section class="panel panel-left">
+    <div class="upload-zone" id="uploadZone">
+      <p style="font-size:1.2rem;margin-bottom:8px;" data-en="📄 Drop PDF here, or click to upload" data-zh="📄 拖放 PDF 到呢度，或點擊上載" data-zh-cn="📄 拖放 PDF 到这里，或点击上传">📄 拖放 PDF 到呢度，或點擊上載</p>
+      <p style="font-size:0.82rem;color:var(--text-secondary);" data-en="After upload, drag to select any text → get explanation on the right" data-zh="上載後拖動選取文字 → 右邊生成解釋" data-zh-cn="上传后拖动选取文字 → 右边生成解释">上載後拖動選取文字 → 右邊生成解釋</p>
+      <input type="file" id="fileInput" accept=".pdf">
+    </div>
+    <div class="upload-bar" id="uploadBar" style="display:none;">
+      <span id="pdfFileName" style="font-size:0.85rem;color:var(--text);"></span>
+      <button class="btn-sm" id="changePdfBtn" data-en="📄 Change PDF" data-zh="📄 換另一個 PDF" data-zh-cn="📄 换另一个 PDF">📄 換另一個 PDF</button>
+    </div>
+    <div class="selected-info" id="selectedInfo">
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+        <span class="sel-label" data-en="📝 Selected:" data-zh="📝 已選取：" data-zh-cn="📝 已选取：">📝 已選取：</span>
+        <span id="selectedPreview" style="flex:1;min-width:100px;font-size:0.8rem;color:var(--text-secondary);">尚未選取文字</span>
+        <span id="usagePdfCounter" style="font-size:0.76rem;color:var(--text-secondary);margin-left:auto;"></span>
+        <button class="btn-primary" id="explainPdfBtn" disabled data-en="🔍 Explain Selected" data-zh="🔍 解讀選取文字" data-zh-cn="🔍 解读选取文字">🔍 解讀選取文字</button>
+      </div>
+    </div>
+    <div class="pdf-container" id="pdfContainer" style="display:none;"></div>
+  </section>
+
+  <section class="panel">
+    <div class="difficulty-selector" id="difficultySelector">
+      <button class="diff-btn" data-level="elementary" data-en="🎒 Kid" data-zh="🎒 小學" data-zh-cn="🎒 小学">🎒 小學</button>
+      <button class="diff-btn active" data-level="secondary" data-en="🎓 Teen" data-zh="🎓 中學" data-zh-cn="🎓 中学">🎓 中學</button>
+      <button class="diff-btn" data-level="working-adult" data-en="💼 Working Adult" data-zh="💼 上班" data-zh-cn="💼 上班族">💼 上班</button>
+    </div>
+    <div class="output-area">
+      <div class="output-placeholder" id="outputPlaceholder">
+        <p data-en="📄 Upload a PDF," data-zh="📄 上載 PDF 後，" data-zh-cn="📄 上传 PDF 后，">📄 上載 PDF 後，</p>
+        <p data-en="drag to select any text," data-zh="拖動選取你想理解嘅文字，" data-zh-cn="拖动选取你想理解的文字，">拖動選取你想理解嘅文字，</p>
+        <p data-en="then click Explain" data-zh="然後撳「解讀」" data-zh-cn="然后按「解读」">然後撳「解讀」</p>
+      </div>
+      <div class="output-loading" id="outputLoading">
+        <div class="spinner"></div>
+        <p id="loadingText">AI 正在用白話幫你翻譯緊...</p>
+      </div>
+      <div class="output-content" id="outputContent"></div>
+    </div>
+  </section>
+</main>
+
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+var $ = function(id) { return document.getElementById(id); };
+
+var state = {
+  provider: 'deepseek',
+  apiKey: '',
+  difficulty: 'secondary',
+  selectedText: '',
+  pdfDoc: null,
+  language: 'zh',
+  configured: false,
+  customEndpoint: '',
+  customModel: ''
+};
+
+var outputPlaceholder = $('outputPlaceholder');
+var outputLoading = $('outputLoading');
+var outputContent = $('outputContent');
+var pdfContainer = $('pdfContainer');
+var selectedInfo = $('selectedInfo');
+var selectedPreview = $('selectedPreview');
+var fileInput = $('fileInput');
+var uploadZone = $('uploadZone');
+var loadingText = $('loadingText');
+
+// === Usage Tracking ===
+var PDF_LIMIT = 3;
+function getToday() { return new Date().toISOString().slice(0, 10); }
+function getPdfUsage() {
+  var data = localStorage.getItem('ez-pdf-usage');
+  if (!data) return { date: getToday(), count: 0 };
+  try { return JSON.parse(data); } catch(e) { return { date: getToday(), count: 0 }; }
+}
+function savePdfUsage(data) { localStorage.setItem('ez-pdf-usage', JSON.stringify(data)); }
+function getPdfRemaining() {
+  var u = getPdfUsage();
+  if (u.date !== getToday()) { u = { date: getToday(), count: 0 }; savePdfUsage(u); }
+  return PDF_LIMIT - u.count;
+}
+function useOnePdf() {
+  var u = getPdfUsage();
+  if (u.date !== getToday()) { u = { date: getToday(), count: 0 }; }
+  u.count++;
+  savePdfUsage(u);
+  updatePdfUsageUI();
+}
+function updatePdfUsageUI() {
+  var remaining = getPdfRemaining();
+  var isEn = state.language === 'en';
+  var isCn = state.language === 'zh-cn';
+  if (remaining <= 0) {
+    $('usagePdfCounter').innerHTML = (isEn ? '<span style="color:#ff3b30;">0/' + PDF_LIMIT + ' uses left today. <span style="cursor:pointer;text-decoration:underline;color:var(--accent);" onclick="alert(\'Upgrade to Pro! $39 USD one-time. Coming soon!\')">Upgrade to Pro →</span>' : (isCn ? '<span style="color:#ff3b30;">0/' + PDF_LIMIT + ' 次。 <span style="cursor:pointer;text-decoration:underline;color:var(--accent);" onclick="alert(\'升级到 Pro！$39 USD 一次买断。即将推出！\')">升级到 Pro →</span>' : '<span style="color:#ff3b30;">0/' + PDF_LIMIT + ' 次。<span style="cursor:pointer;text-decoration:underline;color:var(--accent);" onclick="alert(\'升級到 Pro！$39 USD 一次買斷。即將推出！\')">升級到 Pro →</span>'));
+    $('explainPdfBtn').disabled = true;
+  } else {
+    $('usagePdfCounter').innerHTML = (isEn ? 'PDF: <strong>' + remaining + '</strong>/' + PDF_LIMIT + ' free today' : (isCn ? 'PDF：<strong>' + remaining + '</strong>/' + PDF_LIMIT + ' 次免费' : 'PDF：<strong>' + remaining + '</strong>/' + PDF_LIMIT + ' 次免費'));
+    if (state.selectedText) $('explainPdfBtn').disabled = false;
+  }
+}
+
+// === Init ===
+loadConfig();
+  updatePdfUsageUI();
+initLanguage();
+initTheme();
+
+uploadZone.addEventListener('click', function() { fileInput.click(); });
+uploadZone.addEventListener('dragover', function(e) { e.preventDefault(); uploadZone.classList.add('dragover'); });
+uploadZone.addEventListener('dragleave', function() { uploadZone.classList.remove('dragover'); });
+uploadZone.addEventListener('drop', function(e) {
+  e.preventDefault(); uploadZone.classList.remove('dragover');
+  var file = e.dataTransfer.files[0];
+  if (file && file.type === 'application/pdf') loadPDF(file);
+});
+fileInput.addEventListener('change', function() {
+  var file = fileInput.files[0];
+  if (file) loadPDF(file);
+});
+
+$('themeToggle').addEventListener('click', function() {
+  var current = document.documentElement.getAttribute('data-theme');
+  var next = current === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  this.textContent = next === 'dark' ? '☀️' : '🌙';
+  localStorage.setItem('ez-theme', next);
+});
+
+$('explainPdfBtn').addEventListener('click', doExplainPdf);
+$('changePdfBtn').addEventListener('click', function() {
+  $('uploadBar').style.display = 'none';
+  pdfContainer.style.display = 'none';
+  uploadZone.style.display = 'block';
+  selectedPreview.textContent = '尚未選取文字'; $('explainPdfBtn').disabled = true;
+  state.selectedText = '';
+  outputContent.style.display = 'none';
+  outputPlaceholder.style.display = 'flex';
+  pdfContainer.innerHTML = '';
+});
+
+$('langZh').addEventListener('click', function() { setLanguage('zh'); });
+$('langEn').addEventListener('click', function() { setLanguage('en'); });
+$('langCn').addEventListener('click', function() { setLanguage('zh-cn'); });
+
+document.querySelectorAll('.diff-btn').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.diff-btn').forEach(function(b) { b.classList.remove('active'); });
+    btn.classList.add('active');
+    state.difficulty = btn.dataset.level;
+  });
+});
+
+// === Language ===
+function initLanguage() {
+  state.language = localStorage.getItem('ez-lang') || 'zh';
+  applyLanguage(state.language);
+}
+
+function setLanguage(lang) {
+  state.language = lang;
+  localStorage.setItem('ez-lang', lang);
+  applyLanguage(lang);
+}
+
+function applyLanguage(lang) {
+  document.querySelectorAll('.lang-btn').forEach(function(btn) { btn.classList.remove('active'); });
+  if (lang === 'zh') $('langZh').classList.add('active');
+  else if (lang === 'zh-cn') $('langCn').classList.add('active');
+  else $('langEn').classList.add('active');
+
+  document.querySelectorAll('[data-en]').forEach(function(el) {
+    var text = lang === 'en' ? el.getAttribute('data-en') : el.getAttribute('data-zh');
+    if (text) el.textContent = text;
+  });
+  if (lang === 'zh-cn') {
+    document.querySelectorAll('[data-zh-cn]').forEach(function(el) {
+      var text = el.getAttribute('data-zh-cn');
+      if (text) el.textContent = text;
+    });
+  }
+  document.title = lang === 'en' ? 'PDF MakeItSimple' : (lang === 'zh-cn' ? 'PDF 讲人话' : 'PDF 講人話');
+  updatePdfUsageUI();
+}
+
+// === Theme ===
+function initTheme() {
+  var theme = localStorage.getItem('ez-theme');
+  if (theme) { document.documentElement.setAttribute('data-theme', theme); $('themeToggle').textContent = theme === 'dark' ? '☀️' : '🌙'; }
+}
+
+// Load config
+function loadConfig() {
+  var saved = localStorage.getItem('ez-api-key');
+  if (saved) state.apiKey = saved;
+  var savedProv = localStorage.getItem('ez-custom-endpoint');
+  if (savedProv) state.customEndpoint = savedProv;
+  var savedModel = localStorage.getItem('ez-custom-model');
+  if (savedModel) state.customModel = savedModel;
+  fetch('/api/config').then(function(r) { return r.json(); }).then(function(c) {
+    if (c.configured) { state.provider = c.provider; state.configured = true; }
+  });
+}
+
+async function loadPDF(file) {
+  var arrayBuffer = await file.arrayBuffer();
+  state.pdfDoc = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+  pdfContainer.innerHTML = '';
+  pdfContainer.style.display = 'block';
+  $('uploadBar').style.display = 'flex';
+  $('pdfFileName').textContent = '📄 ' + file.name;
+  selectedPreview.textContent = '尚未選取文字'; $('explainPdfBtn').disabled = true;
+  outputContent.style.display = 'none';
+  outputPlaceholder.style.display = 'flex';
+
+  var allText = '';
+  for (var i = 1; i <= state.pdfDoc.numPages; i++) {
+    var page = await state.pdfDoc.getPage(i);
+    var textContent = await page.getTextContent();
+
+    // Group text items into paragraphs by Y gaps
+    var items = textContent.items;
+    var paragraphs = [];
+    var currentPara = '';
+    var lastY = -1;
+    var lineGap = 0;
+
+    for (var j = 0; j < items.length; j++) {
+      var item = items[j];
+      var y = Math.round(item.transform[5]);
+      var x = item.transform[4];
+
+      if (lastY >= 0) {
+        var dy = Math.abs(y - lastY);
+        // Large Y gap = new paragraph
+        if (dy > 15) {
+          if (currentPara.trim()) paragraphs.push(currentPara.trim());
+          currentPara = '';
+          lineGap = 0;
+        }
+        // Small Y gap = new line in same paragraph
+        else if (dy > 2) {
+          currentPara += '\n';
+          lineGap++;
+          // After 2+ line gaps, maybe new paragraph
+          if (lineGap >= 3 && currentPara.trim()) {
+            // Keep in same paragraph unless really far apart
+          }
+        }
+      }
+      currentPara += item.str + (item.hasEOL ? ' ' : '');
+      lastY = y;
+    }
+    if (currentPara.trim()) paragraphs.push(currentPara.trim());
+
+    // Render page text as paragraphs
+    var pageDiv = document.createElement('div');
+    pageDiv.className = 'pdf-page';
+    var h4 = document.createElement('h4');
+    h4.textContent = 'Page ' + i;
+    pageDiv.appendChild(h4);
+
+    paragraphs.forEach(function(para) {
+      var p = document.createElement('p');
+      p.textContent = para;
+      pageDiv.appendChild(p);
+      allText += para + '\n\n';
+    });
+
+    pdfContainer.appendChild(pageDiv);
+  }
+
+  // Listen for text selection in the PDF container
+  pdfContainer.addEventListener('mouseup', function() {
+    setTimeout(function() {
+      var sel = window.getSelection();
+      var selected = sel.toString().trim();
+      if (selected && selected.length > 5) {
+        state.selectedText = selected;
+        selectedPreview.textContent = selected.slice(0, 300) + (selected.length > 300 ? '...' : '');
+        $('explainPdfBtn').disabled = false;
+      }
+    }, 50);
+  });
+}
+
+function doExplainPdf() {
+  if (getPdfRemaining() <= 0) { alert('今日PDF次數已用完。升級到 Pro 無限使用！'); return; }
+  if (!state.selectedText) return;
+  if (!state.configured || !state.apiKey) {
+    var alerts = { en: 'Please set your API Key first (click ⚙️ on the main page)', zh: '請先設定 API Key（去主頁面 ⚙️ 設定）', 'zh-cn': '请先设置 API Key（去主页面 ⚙️ 设置）' };
+    alert(alerts[state.language] || alerts.zh);
+    return;
+  }
+
+  outputPlaceholder.style.display = 'none';
+  outputContent.style.display = 'none';
+  outputLoading.style.display = 'flex';
+  var loadingTexts = { en: 'AI is translating into plain language...', 'zh-cn': 'AI 正在用白话帮你翻译中...', zh: 'AI 正在用白話幫你翻譯緊...' };
+  loadingText.textContent = loadingTexts[state.language] || loadingTexts.zh;
+
+  fetch('/api/explain', {
+    method: 'POST', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({
+      text: state.selectedText, difficulty: state.difficulty,
+      provider: state.provider, apiKey: state.apiKey,
+      language: state.language,
+      customEndpoint: state.customEndpoint, customModel: state.customModel
+    })
+  }).then(function(r) { return r.json(); }).then(function(data) {
+    outputLoading.style.display = 'none';
+    if (data.error) { showError(data.error); } else { showResult(data.result);
+        useOnePdf(); }
+  }).catch(function() {
+    outputLoading.style.display = 'none';
+    showError('unknown');
+  });
+}
+
+function showResult(text) {
+  outputContent.innerHTML = '';
+  var sections = text.split(/\n(?=📌|💬|🧸|✅)/);
+  sections.forEach(function(s) {
+    s = s.trim();
+    if (!s) return;
+    var title = s.split('\n')[0];
+    var body = s.split('\n').slice(1).join('\n').trim();
+    var secDiv = document.createElement('div');
+    secDiv.className = 'output-section';
+    var h3 = document.createElement('h3');
+    h3.textContent = title;
+    var p = document.createElement('p');
+    p.innerHTML = renderMarkdown(body || title);
+    var copyBtn = document.createElement('button');
+    copyBtn.className = 'copy-btn';
+    copyBtn.textContent = state.language === 'en' ? 'Copy' : (state.language === 'zh-cn' ? '复制' : '複製');
+    copyBtn.addEventListener('click', function() {
+      navigator.clipboard.writeText(title + '\n' + body);
+      copyBtn.textContent = state.language === 'en' ? 'Copied!' : (state.language === 'zh-cn' ? '已复制!' : '已複製!');
+      setTimeout(function() { copyBtn.textContent = state.language === 'en' ? 'Copy' : (state.language === 'zh-cn' ? '复制' : '複製'); }, 1500);
+    });
+    secDiv.appendChild(h3);
+    secDiv.appendChild(p);
+    secDiv.appendChild(copyBtn);
+    outputContent.appendChild(secDiv);
+  });
+  outputContent.style.display = 'flex';
+}
+
+function showError(code) {
+  var messagesEn = { auth_error: 'API key seems wrong 🔑', quota_exceeded: 'Quota exceeded! 💰', unknown: 'Something went wrong, try again 🥲' };
+  var messagesCn = { auth_error: 'Key 好像有问题 🔑', quota_exceeded: '额度用完了！ 💰', unknown: '不知道发生什么，再试一次 🥲' };
+  var messagesZh = { auth_error: 'Key 似乎有問題 🔑', quota_exceeded: '今個月嘅用量爆咗啦！ 💰', unknown: '唔知發生咩事，再試一次啦 🥲' };
+  var messages = state.language === 'en' ? messagesEn : (state.language === 'zh-cn' ? messagesCn : messagesZh);
+  outputContent.innerHTML = '<div class="output-section"><p>' + (messages[code] || messages.unknown) + '</p></div>';
+  outputContent.style.display = 'flex';
+}
+
+function escapeHtml(str) { return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function renderMarkdown(text) {
+  var html = escapeHtml(text);
+  html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  html = html.replace(/(^|\n)([-•*]) (.+)/g, '$1<li>$3</li>');
+  html = html.replace(/(<li>[\s\S]*?<\/li>)/g, function(m) {
+    if (m.indexOf('<ul>') === -1 && m.indexOf('<ol>') === -1) return '<ul>' + m + '</ul>';
+    return m;
+  });
+  html = html.replace(/\n\n/g, '<br><br>');
+  html = html.replace(/\n/g, '<br>');
+  return html;
+}
+</script>
+</body>
+</html>

@@ -3,24 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>easytounderstand — 白話翻譯機</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='80' font-size='80'>💡</text></svg>">
+  <title>講人話 — 複雜文章變簡單白話</title>
+  <link rel="icon" href="icon128.png">
   <style>
 /* === Reset & Variables === */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --bg: #fafafa;
-  --bg-alt: #f0f0f0;
+  --bg: #fef9f0;
+  --bg-alt: #f5ead5;
   --surface: rgba(255,255,255,0.75);
   --surface-hover: rgba(255,255,255,0.92);
   --border: rgba(0,0,0,0.08);
   --text: #1a1a1a;
   --text-secondary: #6b6b6b;
-  --accent: #ff6b35;
-  --accent-hover: #e85d2a;
-  --accent-light: rgba(255,107,53,0.10);
-  --accent-border: rgba(255,107,53,0.30);
+  --accent: #0cf6b7;
+  --accent-hover: #0ae0a5;
+  --accent-light: rgba(12,246,183,0.10);
+  --accent-border: rgba(12,246,183,0.30);
   --radius: 16px;
   --radius-sm: 10px;
   --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
@@ -34,8 +34,8 @@
   --border: rgba(255,255,255,0.10);
   --text: #f0f0f0;
   --text-secondary: #999;
-  --accent-light: rgba(255,107,53,0.15);
-  --accent-border: rgba(255,107,53,0.40);
+  --accent-light: rgba(12,246,183,0.15);
+  --accent-border: rgba(12,246,183,0.40);
 }
 
 body {
@@ -53,7 +53,8 @@ body {
   background: var(--surface); border-bottom: 1px solid var(--border);
 }
 .nav-inner { max-width: 1400px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; padding:12px 24px; }
-.nav-logo { font-weight:700; font-size:1.1rem; }
+.nav-logo { font-weight:700; font-size:1.1rem; display:flex; align-items:center; gap:8px; }
+	.nav-icon { width:28px; height:28px; border-radius:6px; }
 .nav-actions { display:flex; gap:8px; }
 .icon-btn {
   background: var(--surface); border:1px solid var(--border); border-radius:8px;
@@ -61,6 +62,19 @@ body {
   transition: all var(--transition);
 }
 .icon-btn:hover { background: var(--surface-hover); }
+	.lang-btn {
+	  background: var(--surface); border:1px solid var(--border); border-radius:6px;
+	  padding:5px 10px; cursor:pointer; font-size:0.82rem; color:var(--text-secondary);
+	  transition: all var(--transition); font-weight:500;
+	}
+	.lang-btn:hover { border-color:var(--accent); color:var(--accent); }
+	.lang-btn.active { background:var(--accent); color:#05262f; border-color:var(--accent); }
+	.lang-select { display:none; background:var(--surface); border:1px solid var(--border); border-radius:6px; padding:5px 8px; font-size:0.82rem; color:var(--text); font-family:inherit; cursor:pointer; }
+	.lang-tooltip { display:none; position:absolute; top:100%; right:0; margin-top:6px; background:var(--accent); color:#05262f; font-size:0.72rem; padding:4px 10px; border-radius:6px; white-space:nowrap; }
+	.lang-tooltip.show { display:block; }
+	.nav-actions { position:relative; }
+	.welcome-toast { position:fixed; top:20px; left:50%; transform:translateX(-50%); z-index:300; background:var(--accent); color:#05262f; padding:14px 24px; border-radius:12px; font-size:0.9rem; font-weight:600; box-shadow:0 8px 32px rgba(0,0,0,0.15); opacity:0; transition:opacity 0.4s,transform 0.4s; pointer-events:none; max-width:90vw; text-align:center; }
+	.welcome-toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
 
 /* === Main Layout === */
 .main-container { display:flex; gap:16px; max-width:1400px; margin:16px auto; padding:0 16px; min-height:calc(100vh - 80px); }
@@ -71,7 +85,7 @@ body {
 
 /* === Buttons === */
 .btn-primary {
-  background:var(--accent); color:#fff; border:none; border-radius:50px;
+  background:var(--accent); color:#05262f; border:none; border-radius:50px;
   padding:10px 22px; font-weight:600; font-size:0.9rem; cursor:pointer;
   transition: all var(--transition);
 }
@@ -88,6 +102,11 @@ body {
 .btn-outline { background:transparent; border:1px dashed var(--border); color:var(--text-secondary); width:100%; margin-top:8px; }
 .btn-outline:hover { border-color:var(--accent); color:var(--accent); }
 .btn-explain { padding:12px 32px; width:100%; font-size:1rem; }
+	.usage-counter { text-align:center; font-size:0.76rem; color:var(--text-secondary); margin-top:8px; }
+	.usage-counter .remaining { font-weight:600; color:var(--accent); }
+	.usage-counter .upgrade-link { color:var(--accent); text-decoration:underline; cursor:pointer; font-weight:600; }
+	.step-hint { display:none; text-align:center; padding:10px 14px; margin-top:12px; border-radius:8px; background:var(--accent-light); border:1px solid var(--accent-border); font-size:0.82rem; color:var(--accent); }
+	.step-hint.show { display:block; }
 
 /* === Text Input === */
 .text-input {
@@ -120,7 +139,7 @@ body {
 }
 .difficulty-selector { display:flex; gap:4px; margin-bottom:12px; background:var(--bg); border-radius:8px; padding:4px; }
 .diff-btn { flex:1; padding:8px 6px; border:none; border-radius:6px; background:transparent; cursor:pointer; font-size:0.8rem; color:var(--text-secondary); transition:all var(--transition); }
-.diff-btn.active { background:var(--accent); color:#fff; }
+.diff-btn.active { background:var(--accent); color:#05262f; }
 
 /* === Output Area === */
 .output-area { flex:1; padding:20px; border-radius:var(--radius); border:1px solid var(--border); background:var(--surface); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); min-height:400px; display:flex; flex-direction:column; }
@@ -143,6 +162,7 @@ body {
 .feedback-row { display:flex; align-items:center; gap:8px; margin-top:12px; font-size:0.85rem; color:var(--text-secondary); }
 .feedback-row button { background:var(--surface); border:1px solid var(--border); border-radius:50%; width:32px; height:32px; cursor:pointer; font-size:1rem; transition:all var(--transition); }
 .feedback-row button:hover { border-color:var(--accent); }
+	.feedback-input { background:var(--bg); border:1px solid var(--border); border-radius:6px; padding:4px 8px; font-size:0.78rem; color:var(--text); font-family:inherit; width:160px; margin-left:4px; }
 
 /* === Onboarding === */
 .onboard-overlay { display:none; position:fixed; inset:0; z-index:200; background:rgba(0,0,0,0.5); align-items:center; justify-content:center; }
@@ -151,7 +171,7 @@ body {
 .onboard-steps { display:flex; flex-direction:column; gap:10px; margin:20px 0; text-align:left; }
 .onboard-step { display:flex; align-items:center; gap:10px; font-size:0.9rem; opacity:0.4; }
 .onboard-step.active { opacity:1; }
-.step-num { background:var(--accent); color:#fff; border-radius:50%; width:24px; height:24px; display:flex; align-items:center; justify-content:center; font-size:0.78rem; font-weight:700; }
+.step-num { background:var(--accent); color:#05262f; border-radius:50%; width:24px; height:24px; display:flex; align-items:center; justify-content:center; font-size:0.78rem; font-weight:700; }
 
 /* === Settings Modal === */
 .modal-overlay { display:none; position:fixed; inset:0; z-index:150; background:rgba(0,0,0,0.4); align-items:center; justify-content:center; }
@@ -173,23 +193,31 @@ body {
 .save-toast { display:none; font-size:0.82rem; color:#34c759; margin-left:10px; }
 .save-toast.show { display:inline; }
 #providerInfo { font-size:0.82rem; color:var(--text-secondary); padding:8px 12px; border-radius:8px; background:var(--bg-alt); }
+	.custom-warning { font-size:0.76rem; color:var(--text-secondary); padding:8px 12px; border-radius:6px; background:var(--bg-alt); border:1px solid var(--border); margin-top:8px; }
 
 /* === Footer === */
 .footer { text-align:center; padding:20px; color:var(--text-secondary); font-size:0.78rem; }
 
 /* === Responsive === */
 @media (max-width: 768px) {
+	  .lang-group { display:none; }
+	  .lang-select { display:inline-block; }
   .main-container { flex-direction:column; padding:8px; }
   .panel { flex:none; }
   .text-input { min-height:140px; }
   .output-area { min-height:300px; }
+  .diff-btn { font-size:0.72rem; padding:8px 4px; }
+  .difficulty-selector { gap:2px; padding:2px; }
 }
   </style>
 </head>
 <body>
 
 <!-- Onboarding Overlay -->
-<div class="onboard-overlay" id="onboardOverlay">
+<div class="welcome-toast" id="welcomeToast"></div>
+
+	<!-- Onboarding Overlay -->
+	<div class="onboard-overlay" id="onboardOverlay">
   <div class="onboard-card">
     <h2 id="onboardTitle" data-en="Welcome! 3 Steps 👋" data-zh="歡迎！三步開始 👋" data-zh-cn="欢迎！三步开始 👋">歡迎！三步開始 👋</h2>
     <div class="onboard-steps">
@@ -213,10 +241,13 @@ body {
 <!-- Nav -->
 <nav class="nav-bar">
   <div class="nav-inner">
-    <span class="nav-logo">💡 easytounderstand</span>
+    <span class="nav-logo" id="navLogo"><img src="icon128.png" class="nav-icon" alt=""> <span data-en="MakeItSimple" data-zh="講人話" data-zh-cn="讲人话">講人話</span></span>
     <div class="nav-actions">
-      <button class="icon-btn" id="settingsBtn" title="API 設定" data-en-title="Settings" data-zh-title="API 設定" data-zh-cn-title="API 设置">⚙️</button>
-      <button class="icon-btn" id="langToggle" title="Language">EN</button>
+      <a href="pdf.html" class="lang-btn" title="上載 PDF 解釋" data-en-title="Upload PDF to explain" data-zh-title="上載 PDF 解釋" data-zh-cn-title="上传 PDF 解释" style="text-decoration:none;">📄 PDF</a>
+	      <button class="icon-btn" id="settingsBtn" title="API 設定" data-en-title="Settings" data-zh-title="API 設定" data-zh-cn-title="API 设置">⚙️</button>
+      <span class="lang-group" id="langGroup"><button class="lang-btn" id="langZh" title="廣東話">粵語</button>
+	      <button class="lang-btn active" id="langEn" title="English">English</button>
+	      <button class="lang-btn" id="langCn" title="普通話">普通話</button></span><select class="lang-select" id="langSelect" style="display:none;"><option value="zh">粵語</option><option value="en">English</option><option value="zh-cn">普通話</option></select><span class="lang-tooltip" id="langTooltip">已根據瀏覽器語言自動選擇</span>
       <button class="icon-btn" id="themeToggle" title="深淺色切換" data-en-title="Dark/Light" data-zh-title="深淺色切換" data-zh-cn-title="深浅色切换">🌙</button>
     </div>
   </div>
@@ -235,6 +266,13 @@ body {
         <select id="providerSelect"></select>
       </div>
       <div class="form-group" id="providerInfo"></div>
+	      <div class="form-group" id="customFields" style="display:none;">
+	        <label data-en="API Endpoint URL" data-zh="API 網址" data-zh-cn="API 网址">API 網址</label>
+	        <input type="text" id="customEndpoint" placeholder="https://api.example.com/v1/chat/completions" data-en-placeholder="https://api.example.com/v1/chat/completions" data-zh-placeholder="https://api.example.com/v1/chat/completions" data-zh-cn-placeholder="https://api.example.com/v1/chat/completions">
+	        <label style="margin-top:8px;" data-en="Model Name" data-zh="模型名稱" data-zh-cn="模型名称">模型名稱</label>
+	        <input type="text" id="customModel" placeholder="gpt-3.5-turbo" data-en-placeholder="gpt-3.5-turbo" data-zh-placeholder="gpt-3.5-turbo" data-zh-cn-placeholder="gpt-3.5-turbo">
+	        <p class="custom-warning" data-en="Your API key and content will be forwarded through this local server to your endpoint above. Only use endpoints you trust." data-zh="你嘅 API Key 同內容會經呢個本機伺服器轉發去你指定嘅 endpoint，請只使用可信任嘅服務。" data-zh-cn="你的 API Key 和内容会经过这个本机服务器转发到你指定的 endpoint，请只使用可信任的服务。">你嘅 API Key 同內容會經呢個本機伺服器轉發去你指定嘅 endpoint，請只使用可信任嘅服務。</p>
+	      </div>
       <div class="form-group">
         <label>API Key</label>
         <div class="key-row">
@@ -267,7 +305,9 @@ body {
     <div class="input-meta" id="inputMeta"></div>
     <button class="btn-sm btn-outline" id="sampleBtn" data-en="💡 Try Sample Text" data-zh="💡 試下範例文字" data-zh-cn="💡 试试示例文字">💡 試下範例文字</button>
 
-    <div class="paragraphs-container" id="paragraphsContainer"></div>
+    <div class="step-hint" id="stepHint"></div>
+
+	    <div class="paragraphs-container" id="paragraphsContainer"></div>
 
     <div class="action-bar" id="actionBar">
       <div class="difficulty-selector" id="difficultySelector">
@@ -276,13 +316,14 @@ body {
         <button class="diff-btn" data-level="working-adult" data-en="💼 Working Adult" data-zh="💼 上班" data-zh-cn="💼 上班族">💼 上班</button>
       </div>
       <button class="btn-primary btn-explain" id="explainBtn" disabled data-en="🔍 Explain Selected Paragraph" data-zh="🔍 解讀選中嘅段落" data-zh-cn="🔍 解读选中的段落">🔍 解讀選中嘅段落</button>
+	      <div class="usage-counter" id="usageCounter"></div>
     </div>
   </section>
 
   <!-- Right Column -->
   <section class="panel panel-right">
     <div class="panel-header">
-      <h2 data-en="✨ Plain Explanation" data-zh="✨ 白話解讀" data-zh-cn="✨ 白话解读">✨ 白話解讀</h2>
+      <h2 data-en="✨ Plain Explanation" data-zh="✨ 用人話解讀" data-zh-cn="✨ 用人话解读">✨ 用人話解讀</h2>
     </div>
     <div class="output-area" id="outputArea">
       <div class="output-placeholder" id="outputPlaceholder">
@@ -303,6 +344,8 @@ body {
 <script>
 // === State ===
 var state = {
+  customEndpoint: '',
+  customModel: '',
   provider: 'deepseek',
   apiKey: '',
   difficulty: 'secondary',
@@ -325,14 +368,59 @@ var settingsModal = $('settingsModal');
 var onboardOverlay = $('onboardOverlay');
 var providerSelect = $('providerSelect');
 var providerInfo = $('providerInfo');
+var customFields = $('customFields');
+var customEndpoint = $('customEndpoint');
+var customModel = $('customModel');
 var apiKeyInput = $('apiKeyInput');
 var testResult = $('testResult');
 var saveToast = $('saveToast');
 var loadingText = $('loadingText');
+var usageCounter = $('usageCounter');
+var stepHint = $('stepHint');
 
 // === Init ===
+// === Usage Tracking ===
+var DAILY_LIMIT = 10;
+
+function getToday() { return new Date().toISOString().slice(0, 10); }
+
+function getUsage() {
+  var data = localStorage.getItem('ez-usage');
+  if (!data) return { date: getToday(), count: 0 };
+  try { return JSON.parse(data); } catch(e) { return { date: getToday(), count: 0 }; }
+}
+
+function saveUsage(data) { localStorage.setItem('ez-usage', JSON.stringify(data)); }
+
+function getRemaining() {
+  var u = getUsage();
+  if (u.date !== getToday()) { u = { date: getToday(), count: 0 }; saveUsage(u); }
+  return DAILY_LIMIT - u.count;
+}
+
+function useOne() {
+  var u = getUsage();
+  if (u.date !== getToday()) { u = { date: getToday(), count: 0 }; }
+  u.count++;
+  saveUsage(u);
+  updateUsageUI();
+}
+
+function updateUsageUI() {
+  var remaining = getRemaining();
+  var isEn = state.language === 'en';
+  var isCn = state.language === 'zh-cn';
+  if (remaining <= 0) {
+    usageCounter.innerHTML = (isEn ? 'No uses left today. <span class="upgrade-link" onclick="alert(\'Upgrade to Pro! $39 USD one-time, unlimited use. Coming soon!\')">Upgrade to Pro →</span>' : (isCn ? '今天次数用完了。<span class="upgrade-link" onclick="alert(\'升级到 Pro！$39 USD 一次买断，无限使用。即将推出！\')">升级到 Pro →</span>' : '今日次數用完了。<span class="upgrade-link" onclick="alert(\'升級到 Pro！$39 USD 一次買斷，無限使用。即將推出！\')">升級到 Pro →</span>'));
+    explainBtn.disabled = true;
+  } else {
+    usageCounter.innerHTML = (isEn ? '<span class="remaining">' + remaining + '</span>/' + DAILY_LIMIT + ' uses left today' : (isCn ? '今日剩余 <span class="remaining">' + remaining + '</span>/' + DAILY_LIMIT + ' 次' : '今日剩餘 <span class="remaining">' + remaining + '</span>/' + DAILY_LIMIT + ' 次'));
+  }
+}
+
 function init() {
   loadConfigFromServer();
+  updateUsageUI();
   loadProviders();
   textInput.addEventListener('input', onTextInput);
   $('pasteBtn').addEventListener('click', pasteFromClipboard);
@@ -344,7 +432,10 @@ function init() {
   $('testConnBtn').addEventListener('click', testConnection);
   $('saveConfigBtn').addEventListener('click', saveConfig);
   $('themeToggle').addEventListener('click', toggleTheme);
-  $('langToggle').addEventListener('click', toggleLanguage);
+  $('langZh').addEventListener('click', function() { setLanguage('zh'); });
+	  $('langEn').addEventListener('click', function() { setLanguage('en'); });
+	  $('langCn').addEventListener('click', function() { setLanguage('zh-cn'); });
+	  $('langSelect').addEventListener('change', function() { setLanguage(this.value); });
   $('onboardNext').addEventListener('click', onboardNext);
   providerSelect.addEventListener('change', onProviderChange);
   document.querySelectorAll('.diff-btn').forEach(function(btn) {
@@ -366,8 +457,15 @@ function loadConfigFromServer() {
       state.apiKey = '';
       var saved = localStorage.getItem('ez-api-key');
       if (saved) state.apiKey = saved;
+      var savedCE = localStorage.getItem('ez-custom-endpoint');
+      if (savedCE) state.customEndpoint = savedCE;
+      var savedCM = localStorage.getItem('ez-custom-model');
+      if (savedCM) state.customModel = savedCM;
+      if (c.customEndpoint) customEndpoint.value = c.customEndpoint;
+      if (c.customModel) customModel.value = c.customModel;
       state.configured = true;
       providerSelect.value = c.provider;
+      if (c.provider === 'custom') { customFields.style.display = 'block'; }
       updateProviderInfo();
       $('onboardOverlay').classList.remove('show');
     } else {
@@ -378,15 +476,21 @@ function loadConfigFromServer() {
 
 function saveConfig() {
   var provider = providerSelect.value;
+  var ce = customEndpoint.value.trim();
+  var cm = customModel.value.trim();
   var apiKey = apiKeyInput.value.trim();
   if (!apiKey) return;
   state.provider = provider;
   state.apiKey = apiKey;
+  state.customEndpoint = ce;
+  state.customModel = cm;
+  localStorage.setItem('ez-custom-endpoint', ce);
+  localStorage.setItem('ez-custom-model', cm);
   state.configured = true;
   localStorage.setItem('ez-api-key', apiKey);
   fetch('/api/config', {
     method: 'POST', headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({provider:provider, apiKey:apiKey})
+    body: JSON.stringify({provider:provider, apiKey:apiKey, customEndpoint:ce, customModel:cm})
   }).then(function(r) { return r.json(); }).then(function() {
     saveToast.classList.add('show');
     setTimeout(function() { saveToast.classList.remove('show'); settingsModal.classList.remove('show'); }, 1200);
@@ -399,7 +503,7 @@ function loadProviders() {
     providers.forEach(function(p) {
       var opt = document.createElement('option');
       opt.value = p.id;
-      opt.textContent = p.name + ' — ' + ((state.language === 'en' && p.descEn) ? p.descEn : p.desc);
+      opt.textContent = p.name + ' — ' + ((state.language === 'en' && p.descEn) ? p.descEn : (state.language === 'zh-cn' && p.descCn) ? p.descCn : p.desc);
       providerSelect.appendChild(opt);
     });
     if (state.provider) { providerSelect.value = state.provider; updateProviderInfo(); }
@@ -410,13 +514,14 @@ function refreshProviderOptions() {
   fetch('/api/providers').then(function(r) { return r.json(); }).then(function(providers) {
     providers.forEach(function(p) {
       var opt = providerSelect.querySelector('option[value="' + p.id + '"]');
-      if (opt) opt.textContent = p.name + ' — ' + ((state.language === 'en' && p.descEn) ? p.descEn : p.desc);
+      if (opt) opt.textContent = p.name + ' — ' + ((state.language === 'en' && p.descEn) ? p.descEn : (state.language === 'zh-cn' && p.descCn) ? p.descCn : p.desc);
     });
   });
 }
 
 function onProviderChange() {
   state.provider = providerSelect.value;
+  if (state.provider === 'custom') { customFields.style.display = 'block'; } else { customFields.style.display = 'none'; }
   updateProviderInfo();
   if (textInput.value.trim()) updateMeta();
 }
@@ -441,7 +546,7 @@ function testConnection() {
   testResult.textContent = state.language === 'en' ? 'Testing...' : (state.language === 'zh-cn' ? '测试中...' : '測試緊...'); testResult.className = 'form-hint';
   fetch('/api/test-connection', {
     method: 'POST', headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({provider:provider, apiKey:apiKey})
+    body: JSON.stringify({provider:provider, apiKey:apiKey, customEndpoint:ce, customModel:cm})
   }).then(function(r) { return r.json(); }).then(function(data) {
     if (data.ok) { testResult.textContent = state.language === 'en' ? 'Connected ✅' : (state.language === 'zh-cn' ? '连接成功 ✅' : '連線成功 ✅'); testResult.className = 'form-hint success'; }
     else if (data.error === 'auth_error') { testResult.textContent = state.language === 'en' ? 'Key seems wrong, double check it～ 🔑' : (state.language === 'zh-cn' ? 'Key 好像有问题，检查一下吧～ 🔑' : 'Key 似乎有問題，檢查下啦～ 🔑'); testResult.className = 'form-hint error'; }
@@ -455,10 +560,14 @@ function testConnection() {
 // === Text Input ===
 function onTextInput() {
   var text = textInput.value.trim();
-  if (!text) { paragraphsContainer.innerHTML = ''; inputMeta.innerHTML = ''; explainBtn.disabled = true; return; }
+  if (!text) { paragraphsContainer.innerHTML = ''; inputMeta.innerHTML = ''; explainBtn.disabled = true; stepHint.classList.remove('show'); return; }
   state.paragraphs = text.split(/\n\n+/).filter(function(p) { return p.trim(); });
+  if (state.selectedParagraph < 0 || state.selectedParagraph >= state.paragraphs.length) {
+    state.selectedParagraph = 0;
+  }
   renderParagraphs();
   updateMeta();
+  updateStepHint();
 }
 
 function renderParagraphs() {
@@ -473,8 +582,22 @@ function renderParagraphs() {
       state.selectedParagraph = idx;
       renderParagraphs();
       explainBtn.disabled = false;
+      updateStepHint();
     });
   });
+  explainBtn.disabled = false;
+}
+
+function updateStepHint() {
+  var isEn = state.language === 'en';
+  var isCn = state.language === 'zh-cn';
+  var closeBtn = '<span style="cursor:pointer;float:right;opacity:0.6;" onclick="document.getElementById(\'stepHint\').classList.remove(\'show\')">✕</span>';
+  if (state.paragraphs.length > 1) {
+    stepHint.innerHTML = closeBtn + (isEn ? '👆 Step 1: Click a paragraph above to select it. Step 2: Choose difficulty → Step 3: Click Explain' : (isCn ? '👆 第1步：点选上方段落。第2步：选择难度 → 第3步：点击解读' : '👆 第1步：點選上方段落。第2步：揀難度 → 第3步：解讀'));
+  } else {
+    stepHint.innerHTML = closeBtn + (isEn ? 'Step 2: Choose difficulty → Step 3: Click Explain below' : (isCn ? '第2步：选择难度 → 第3步：点击下方解读' : '第2步：揀難度 → 第3步：按下面解讀'));
+  }
+  stepHint.classList.add('show');
 }
 
 function updateMeta() {
@@ -512,6 +635,7 @@ function clearAll() {
   outputPlaceholder.style.display = 'flex';
   outputLoading.style.display = 'none';
   outputContent.style.display = 'none';
+  stepHint.classList.remove('show');
 }
 
 // === Sample Texts ===
@@ -546,10 +670,26 @@ function doExplain() {
   if (!state.configured || !state.apiKey) {
     settingsModal.classList.add('show'); return;
   }
-  if (state.selectedParagraph < 0 || state.selectedParagraph >= state.paragraphs.length) return;
+  if (state.selectedParagraph < 0 || state.selectedParagraph >= state.paragraphs.length) {
+    outputPlaceholder.style.display = 'none';
+    outputLoading.style.display = 'none';
+    outputContent.style.display = 'flex';
+    outputContent.innerHTML = '<div class="output-section"><p style="text-align:center;">' + (state.language === 'en' ? '👆 Please select a paragraph on the left first!' : (state.language === 'zh-cn' ? '👆 请先在左边选择一个段落！' : '👆 請喺左邊揀一個段落先！')) + '</p></div>';
+    return;
+  }
+  // Check daily limit
+  if (getRemaining() <= 0) {
+    outputPlaceholder.style.display = 'none';
+    outputLoading.style.display = 'none';
+    outputContent.style.display = 'flex';
+    outputContent.innerHTML = '<div class="output-section"><p style="text-align:center;">' + (state.language === 'en' ? 'Daily limit reached. <br>Upgrade to Pro for unlimited use!' : (state.language === 'zh-cn' ? '今日次数已用完。<br>升级到 Pro 无限使用！' : '今日次數已用完。<br>升級到 Pro 無限使用！')) + '</p></div>';
+    updateUsageUI();
+    return;
+  }
 
   var text = state.paragraphs[state.selectedParagraph];
   explainCooldown = true;
+  stepHint.classList.remove('show');
   setTimeout(function() { explainCooldown = false; }, 2000);
 
   // Show loading
@@ -575,6 +715,7 @@ function doExplain() {
       showError(data.error);
     } else {
       showResult(data.result);
+        useOne();
     }
   }).catch(function() {
     outputLoading.style.display = 'none';
@@ -608,6 +749,31 @@ function showError(code) {
 
 function showResult(text) {
   outputContent.innerHTML = '';
+
+  // Top bar: diff+provider label, char count, regenerate
+  var diffLabels = { elementary: state.language === 'en' ? 'Kid' : (state.language === 'zh-cn' ? '小学' : '小學'), secondary: state.language === 'en' ? 'Teen' : (state.language === 'zh-cn' ? '中学' : '中學'), 'working-adult': state.language === 'en' ? 'Work' : (state.language === 'zh-cn' ? '上班' : '上班') };
+  var diffEmojis = { elementary: '🎒', secondary: '🎓', 'working-adult': '💼' };
+  var topBar = document.createElement('div');
+  topBar.style.cssText = 'display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:4px;';
+  var leftGroup = document.createElement('span');
+  leftGroup.style.cssText = 'display:flex;align-items:center;gap:8px;';
+  var diffLabel = document.createElement('span');
+  diffLabel.style.cssText = 'font-size:0.72rem;background:var(--accent);color:#05262f;padding:2px 8px;border-radius:4px;font-weight:600;';
+  diffLabel.textContent = (diffEmojis[state.difficulty] || '') + ' ' + diffLabels[state.difficulty] + ' · ' + (state.provider === 'deepseek' ? 'DeepSeek' : state.provider === 'openai' ? 'OpenAI' : state.provider === 'claude' ? 'Claude' : state.provider === 'gemini' ? 'Gemini' : 'Custom');
+  var charLabel = document.createElement('span');
+  charLabel.style.cssText = 'font-size:0.75rem;color:var(--text-secondary);';
+  var originalChars = state.paragraphs[state.selectedParagraph] ? state.paragraphs[state.selectedParagraph].length : 0;
+  charLabel.textContent = (state.language === 'en' ? 'Original: ' : (state.language === 'zh-cn' ? '原文：' : '原文：')) + originalChars + (state.language === 'en' ? ' chars' : ' 字');
+  leftGroup.appendChild(diffLabel);
+  leftGroup.appendChild(charLabel);
+  var topRegenBtn = document.createElement('button');
+  topRegenBtn.className = 'btn-sm';
+  topRegenBtn.textContent = state.language === 'en' ? '🔄 Regenerate' : (state.language === 'zh-cn' ? '🔄 重新生成' : '🔄 重新生成');
+  topRegenBtn.addEventListener('click', doExplain);
+  topBar.appendChild(leftGroup);
+  topBar.appendChild(topRegenBtn);
+  outputContent.appendChild(topBar);
+
   var sections = text.split(/\n(?=📌|💬|🧸|✅)/);
   sections.forEach(function(s) {
     s = s.trim();
@@ -619,7 +785,7 @@ function showResult(text) {
     var h3 = document.createElement('h3');
     h3.textContent = title;
     var p = document.createElement('p');
-    p.textContent = body || title;
+    p.innerHTML = renderMarkdown(body || title);
     var copyBtn = document.createElement('button');
     copyBtn.className = 'copy-btn';
     copyBtn.textContent = state.language === 'en' ? 'Copy' : (state.language === 'zh-cn' ? '复制' : '複製');
@@ -657,16 +823,69 @@ function showResult(text) {
   // Feedback
   var feedbackDiv = document.createElement('div');
   feedbackDiv.className = 'feedback-row';
-  feedbackDiv.innerHTML = '<span>' + (state.language === 'en' ? 'How was this explanation?' : (state.language === 'zh-cn' ? '这个解释怎么样？' : '呢個解釋點樣？')) + '</span>';
+  var fbLabel = document.createElement('span');
+  fbLabel.textContent = state.language === 'en' ? 'How was this explanation?' : (state.language === 'zh-cn' ? '这个解释怎么样？' : '呢個解釋點樣？');
   var thumbsUp = document.createElement('button');
   thumbsUp.textContent = '👍';
-  thumbsUp.addEventListener('click', function() { feedbackDiv.innerHTML = '<span>' + (state.language === 'en' ? 'Thanks! Happy to help 🎉' : (state.language === 'zh-cn' ? '多谢！好开心能帮到你 🎉' : '多謝！好開心幫到你 🎉')) + '</span>'; });
+  thumbsUp.addEventListener('click', function() {
+    fbLabel.textContent = state.language === 'en' ? 'Thanks! Happy to help 🎉' : (state.language === 'zh-cn' ? '多谢！好开心能帮到你 🎉' : '多謝！好開心幫到你 🎉');
+    thumbsUp.disabled = true; thumbsDown.disabled = true;
+  });
   var thumbsDown = document.createElement('button');
   thumbsDown.textContent = '👎';
-  thumbsDown.addEventListener('click', function() { feedbackDiv.innerHTML = '<span>' + (state.language === 'en' ? 'Got it, will keep improving 💪' : (state.language === 'zh-cn' ? '收到，会继续改进 💪' : '收到，會繼續改進 💪')) + '</span>'; });
+  var feedbackInput = document.createElement('input');
+  feedbackInput.type = 'text';
+  feedbackInput.className = 'feedback-input';
+  feedbackInput.placeholder = state.language === 'en' ? 'What could be better? (optional)' : (state.language === 'zh-cn' ? '哪里可以改进？（选填）' : '邊度可以改進？（選填）');
+  feedbackInput.style.display = 'none';
+  thumbsDown.addEventListener('click', function() {
+    feedbackInput.style.display = 'inline-block';
+    feedbackInput.focus();
+    fbLabel.textContent = state.language === 'en' ? 'Sorry about that. What went wrong?' : (state.language === 'zh-cn' ? '抱歉。哪里有问题？' : '唔好意思。邊度出咗問題？');
+    thumbsUp.disabled = true; thumbsDown.disabled = true;
+    // Hide input after 8 seconds
+    setTimeout(function() {
+      if (feedbackInput.value.trim()) {
+        fbLabel.textContent = state.language === 'en' ? 'Thanks for the feedback! 💪' : (state.language === 'zh-cn' ? '多谢反馈！💪' : '多謝反饋！💪');
+      }
+      feedbackInput.style.display = 'none';
+    }, 8000);
+  });
+  feedbackDiv.appendChild(fbLabel);
   feedbackDiv.appendChild(thumbsUp);
   feedbackDiv.appendChild(thumbsDown);
+  feedbackDiv.appendChild(feedbackInput);
   outputContent.appendChild(feedbackDiv);
+
+  // Re-explain with other difficulties
+  var reExplainDiv = document.createElement('div');
+  reExplainDiv.className = 'output-actions';
+  reExplainDiv.style.borderTop = '1px solid var(--border)';
+  reExplainDiv.style.paddingTop = '12px';
+  var reExplainLabel = document.createElement('span');
+  reExplainLabel.style.cssText = 'font-size:0.78rem;color:var(--text-secondary);margin-right:4px;';
+  reExplainLabel.textContent = state.language === 'en' ? 'Explain as:' : (state.language === 'zh-cn' ? '用其他难度解释：' : '用其他難度解釋：');
+  reExplainDiv.appendChild(reExplainLabel);
+  var difficulties = [
+    { level: 'elementary', label: state.language === 'en' ? 'Kid' : (state.language === 'zh-cn' ? '小学' : '小學'), emoji: '🎒' },
+    { level: 'secondary', label: state.language === 'en' ? 'Teen' : (state.language === 'zh-cn' ? '中学' : '中學'), emoji: '🎓' },
+    { level: 'working-adult', label: state.language === 'en' ? 'Work' : (state.language === 'zh-cn' ? '上班' : '上班'), emoji: '💼' }
+  ];
+  difficulties.forEach(function(d) {
+    if (d.level === state.difficulty) return;
+    var btn = document.createElement('button');
+    btn.className = 'btn-sm';
+    btn.textContent = d.emoji + ' ' + d.label;
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.diff-btn').forEach(function(b) { b.classList.remove('active'); });
+      var targetBtn = document.querySelector('.diff-btn[data-level="' + d.level + '"]');
+      if (targetBtn) targetBtn.classList.add('active');
+      state.difficulty = d.level;
+      doExplain();
+    });
+    reExplainDiv.appendChild(btn);
+  });
+  outputContent.appendChild(reExplainDiv);
 
   outputContent.style.display = 'flex';
 }
@@ -688,23 +907,48 @@ function toggleTheme() {
 
 // === Language ===
 function initLanguage() {
-  state.language = localStorage.getItem('ez-lang') || 'zh';
+  var saved = localStorage.getItem('ez-lang');
+  if (saved) {
+    state.language = saved;
+  } else {
+    var browserLang = (navigator.language || navigator.userLanguage || '').toLowerCase();
+    if (browserLang.startsWith('zh-hk') || browserLang.startsWith('zh-tw') || browserLang.startsWith('zh-hant')) {
+      state.language = 'zh';
+    } else if (browserLang.startsWith('zh')) {
+      state.language = 'zh-cn';
+    } else {
+      state.language = 'en';
+    }
+  }
+  if (!saved) {
+    setTimeout(function() { $('langTooltip').classList.add('show'); }, 500);
+    setTimeout(function() { $('langTooltip').classList.remove('show'); }, 8000);
+    // Welcome toast
+    var welcomeTexts = { en: 'Welcome to MakeItSimple! Hope this helps you understand complex stuff easily～ 💚', zh: '歡迎嚟到講人話！希望幫到你輕鬆理解複雜內容～ 💚', 'zh-cn': '欢迎来到讲人话！希望帮你轻松理解复杂内容～ 💚' };
+    var el = $('welcomeToast');
+    el.textContent = welcomeTexts[state.language] || welcomeTexts.zh;
+    setTimeout(function() { el.classList.add('show'); }, 800);
+    setTimeout(function() { el.classList.remove('show'); }, 6000);
+  }
   applyLanguage(state.language);
 }
 
-function toggleLanguage() {
-  var nextMap = { 'zh': 'zh-cn', 'zh-cn': 'en', 'en': 'zh' };
-  var next = nextMap[state.language] || 'zh';
-  state.language = next;
-  localStorage.setItem('ez-lang', next);
-  applyLanguage(next);
+function setLanguage(lang) {
+  state.language = lang;
+  localStorage.setItem('ez-lang', lang);
+  $('langSelect').value = lang;
+  $('langTooltip').classList.remove('show');
+  applyLanguage(lang);
   // Re-render paragraphs if text exists
-  if (textInput.value.trim()) renderParagraphs();
+  if (textInput.value.trim()) { renderParagraphs(); updateStepHint(); }
 }
 
 function applyLanguage(lang) {
-  var labels = { 'zh': 'EN', 'zh-cn': '粵', 'en': '普' };
-  $('langToggle').textContent = labels[lang] || 'EN';
+  // Highlight the active language button
+  document.querySelectorAll('.lang-btn').forEach(function(btn) { btn.classList.remove('active'); });
+  if (lang === 'zh') $('langZh').classList.add('active');
+  else if (lang === 'zh-cn') $('langCn').classList.add('active');
+  else $('langEn').classList.add('active');
 
   // All elements with data-en
   document.querySelectorAll('[data-en]').forEach(function(el) {
@@ -740,10 +984,14 @@ function applyLanguage(lang) {
     });
   }
 
+  // Update page title
+  document.title = lang === 'en' ? 'MakeItSimple — Complex text, simple words' : (lang === 'zh-cn' ? '讲人话 — 复杂文章变简单白话' : '講人話 — 複雜文章變簡單白話');
+
   // Refresh dynamic text
   if (textInput.value.trim()) updateMeta();
   updateProviderInfo();
   refreshProviderOptions();
+  updateUsageUI();
 }
 
 // === Onboarding ===
@@ -776,6 +1024,23 @@ function onboardNext() {
 
 // === Helpers ===
 function escapeHtml(str) { return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function renderMarkdown(text) {
+  var html = escapeHtml(text);
+  // Bold: **text**
+  html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  // Unordered list: lines starting with - * •
+  html = html.replace(/(^|\n)([-•*]) (.+)/g, '$1<li>$3</li>');
+  html = html.replace(/(<li>[\s\S]*?<\/li>)/g, function(m) {
+    // Wrap consecutive <li> in <ul> if not already wrapped
+    if (m.indexOf('<ul>') === -1 && m.indexOf('<ol>') === -1) return '<ul>' + m + '</ul>';
+    return m;
+  });
+  // Line breaks: double newline = paragraph break
+  html = html.replace(/\n\n/g, '<br><br>');
+  html = html.replace(/\n/g, '<br>');
+  return html;
+}
 
 // === Start ===
 init();

@@ -1,2 +1,5 @@
 .superpowers/
+.claude/
 node_modules/
+data/api-config.json
+prompts/

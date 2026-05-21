@@ -38,10 +38,11 @@ app.get('/api/config', (req, res) => {
 });
 
 app.post('/api/config', (req, res) => {
-  const { provider, apiKey } = req.body;
+  const { provider, apiKey, customEndpoint, customModel } = req.body;
   if (!provider || !apiKey) return res.status(400).json({ error: 'provider and apiKey required' });
   if (!PROVIDERS[provider]) return res.status(400).json({ error: 'unknown provider' });
-  saveConfig({ provider, apiKey });
+  if (provider === 'custom' && !customEndpoint) return res.status(400).json({ error: 'customEndpoint required for custom provider' });
+  saveConfig({ provider, apiKey, customEndpoint: customEndpoint || '', customModel: customModel || '' });
   res.json({ ok: true, provider });
 });
 
@@ -52,10 +53,11 @@ app.delete('/api/config', (req, res) => {
 
 // === Test Connection ===
 app.post('/api/test-connection', async (req, res) => {
-  const { provider, apiKey } = req.body;
+  const { provider, apiKey, customEndpoint, customModel } = req.body;
   if (!provider || !apiKey) return res.status(400).json({ error: 'provider and apiKey required' });
+  if (provider === 'custom' && !customEndpoint) return res.status(400).json({ error: 'customEndpoint required' });
   try {
-    await callAI(provider, apiKey, 'Hello, respond with just "OK".', 'secondary', 'en');
+    await callAI(provider, apiKey, 'Hello, respond with just "OK".', 'secondary', 'en', customEndpoint, customModel);
     res.json({ ok: true });
   } catch (e) {
     if (e.message === 'auth_error') return res.json({ ok: false, error: 'auth_error' });
@@ -72,6 +74,7 @@ app.get('/api/providers', (req, res) => {
     costPer1MOutput: p.costPer1MOutput,
     currency: p.currency,
     desc: p.desc,
+    descCn: p.descCn,
     descEn: p.descEn
   }));
   res.json(list);
@@ -87,14 +90,14 @@ app.post('/api/estimate', (req, res) => {
 
 // === Explain ===
 app.post('/api/explain', async (req, res) => {
-  const { text, difficulty, provider, apiKey, language } = req.body;
+  const { text, difficulty, provider, apiKey, language, customEndpoint, customModel } = req.body;
   if (!text || !difficulty || !provider || !apiKey) {
     return res.status(400).json({ error: 'text, difficulty, provider, and apiKey required' });
   }
   if (text.length > 10000) return res.status(400).json({ error: 'content_too_long' });
 
   try {
-    const result = await callAI(provider, apiKey, text, difficulty, language || 'zh');
+    const result = await callAI(provider, apiKey, text, difficulty, language || 'zh', customEndpoint, customModel);
     res.json({ result });
   } catch (e) {
     if (e.message === 'auth_error') {
