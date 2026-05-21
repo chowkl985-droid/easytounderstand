@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MakeItEasy Thumbnail</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 600px; height: 600px; overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', system-ui, sans-serif;
+    background: linear-gradient(145deg, #0a0a0a 0%, #1a1a1a 50%, #0d1f1a 100%);
+    color: #f0f0f0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center;
+  }
+  .icon-area {
+    background: rgba(12,246,183,0.12);
+    border: 2px solid rgba(12,246,183,0.3);
+    border-radius: 28px;
+    width: 120px; height: 120px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 3.5rem;
+    margin-bottom: 24px;
+  }
+  h1 { font-size: 2.8rem; font-weight: 800; letter-spacing: -1px; }
+  h1 .zh { font-size: 1.6rem; font-weight: 600; color: #999; margin-left: 10px; }
+  .tagline { font-size: 1.15rem; color: #0cf6b7; margin: 12px 0 28px; font-weight: 500; }
+  .price {
+    font-size: 2.4rem; font-weight: 800; color: #0cf6b7;
+    background: rgba(12,246,183,0.1);
+    border: 1px solid rgba(12,246,183,0.25);
+    border-radius: 16px; padding: 12px 36px;
+  }
+  .price sub { font-size: 0.9rem; font-weight: 500; color: #888; display: block; margin-top: 2px; }
+</style>
+</head>
+<body>
+  <div class="icon-area">💬</div>
+  <h1>
+    MakeItEasy
+    <span class="zh">講人話</span>
+  </h1>
+  <p class="tagline">Any language, explained in yours.</p>
+  <p class="price">
+    $39<sub>one-time · lifetime</sub>
+  </p>
+</body>
+</html>

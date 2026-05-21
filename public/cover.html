@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MakeItEasy Cover</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 1280px; height: 720px; overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', system-ui, sans-serif;
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 40%, #0d1f1a 100%);
+    color: #f0f0f0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center;
+    position: relative;
+  }
+  .glass-card {
+    background: rgba(255,255,255,0.06);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 24px;
+    padding: 48px 64px;
+    max-width: 900px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  }
+  .accent { color: #0cf6b7; }
+  h1 { font-size: 3.2rem; font-weight: 800; margin-bottom: 4px; letter-spacing: -0.5px; }
+  h1 .zh { font-size: 2rem; font-weight: 600; color: #999; margin-left: 16px; }
+  .tagline { font-size: 1.4rem; color: #0cf6b7; margin-bottom: 32px; font-weight: 500; }
+  .features {
+    display: flex; gap: 24px; justify-content: center; margin-bottom: 32px;
+    flex-wrap: wrap;
+  }
+  .feat {
+    background: rgba(12,246,183,0.08);
+    border: 1px solid rgba(12,246,183,0.2);
+    border-radius: 12px; padding: 16px 20px;
+    font-size: 0.95rem; color: #ccc;
+    min-width: 160px;
+  }
+  .feat .icon { font-size: 1.5rem; display: block; margin-bottom: 6px; }
+  .pricing {
+    font-size: 2rem; font-weight: 800; color: #0cf6b7; margin-bottom: 4px;
+  }
+  .pricing-sub { font-size: 0.9rem; color: #888; }
+  .corner-badge {
+    position: absolute; top: 24px; right: 24px;
+    background: rgba(12,246,183,0.15);
+    border: 1px solid rgba(12,246,183,0.3);
+    border-radius: 8px; padding: 6px 14px;
+    font-size: 0.78rem; color: #0cf6b7; font-weight: 600;
+  }
+  .bottom-bar {
+    position: absolute; bottom: 24px; left: 0; right: 0;
+    text-align: center; font-size: 0.78rem; color: #555;
+  }
+</style>
+</head>
+<body>
+  <div class="corner-badge">v1.0 — Windows</div>
+
+  <div class="glass-card">
+    <h1>
+      MakeItEasy
+      <span class="zh">講人話</span>
+    </h1>
+    <p class="tagline">Any language, explained in yours.</p>
+
+    <div class="features">
+      <div class="feat">
+        <span class="icon">📄</span>
+        Paste text<br>or upload PDF
+      </div>
+      <div class="feat">
+        <span class="icon">🎒</span>
+        Kid · Teen<br>Working Adult
+      </div>
+      <div class="feat">
+        <span class="icon">🌍</span>
+        Cantonese<br>Mandarin · English
+      </div>
+      <div class="feat">
+        <span class="icon">🤖</span>
+        7 AI engines<br>+ Custom API
+      </div>
+    </div>
+
+    <p class="pricing">$39 USD</p>
+    <p class="pricing-sub">One-time purchase. Unlimited forever. No subscription.</p>
+  </div>
+
+  <div class="bottom-bar">makeiteasy.app</div>
+</body>
+</html>
