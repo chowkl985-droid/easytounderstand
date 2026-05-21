@@ -5,3 +5,5 @@ data/api-config.json
 prompts/
 dist/
 release/
+*.png
+public/test.pdf
