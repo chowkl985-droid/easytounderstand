@@ -59,8 +59,8 @@
     .lang-btn:hover { border-color:var(--accent); color:var(--accent); }
     .lang-btn.active { background:var(--accent); color:#05262f; border-color:var(--accent); }
 
-    .main-container { display:flex; gap:16px; max-width:1400px; margin:16px auto; padding:0 16px; min-height:calc(100vh - 80px); }
-    .panel { flex:1; display:flex; flex-direction:column; }
+    .main-container { display:flex; gap:16px; max-width:1400px; margin:16px auto; padding:0 16px; height:calc(100vh - 112px); }
+    .panel { flex:1; display:flex; flex-direction:column; overflow:hidden; }
     .panel-left { max-width:55%; min-width:300px; }
 
     .btn-primary {
@@ -78,6 +78,8 @@
     .btn-secondary:hover { background:rgba(255,255,255,0.15); }
     .btn-sm { padding:5px 12px; font-size:0.8rem; border-radius:6px; border:1px solid var(--border); background:var(--surface); color:var(--text); cursor:pointer; transition:all var(--transition); text-decoration:none; }
     .btn-sm:hover { border-color:var(--accent); }
+    .pro-btn { background:var(--accent); color:#05262f; border:none; border-radius:6px; padding:5px 12px; cursor:pointer; font-size:0.82rem; font-weight:700; transition:all var(--transition); text-decoration:none; display:inline-block; }
+    .pro-btn:hover { background:var(--accent-hover); transform:translateY(-1px); }
 
     .upload-zone {
       border:2px dashed var(--border); border-radius:var(--radius); padding:40px;
@@ -88,7 +90,7 @@
     .upload-zone input { display:none; }
     .upload-bar { display:flex; align-items:center; justify-content:space-between; padding:10px 16px; border-radius:var(--radius); background:var(--surface); border:1px solid var(--border); margin-bottom:12px; }
 
-    .pdf-container { flex:1; overflow-y:auto; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:20px; min-height:300px; max-height:60vh; }
+    .pdf-container { flex:1; overflow-y:auto; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:20px; min-height:0; }
     .pdf-page { margin-bottom:24px; }
     .pdf-page h4 { font-size:0.9rem; color:var(--text-secondary); margin-bottom:6px; }
     .pdf-page p { font-size:0.88rem; line-height:1.8; color:var(--text); margin-bottom:8px; user-select:text; cursor:text; padding:6px 8px; border-radius:4px; transition:background 0.15s; }
@@ -99,7 +101,7 @@
     .diff-btn { flex:1; padding:8px 6px; border:none; border-radius:6px; background:transparent; cursor:pointer; font-size:0.8rem; color:var(--text-secondary); transition:all var(--transition); }
     .diff-btn.active { background:var(--accent); color:#05262f; }
 
-    .output-area { flex:1; padding:20px; border-radius:var(--radius); border:1px solid var(--border); background:var(--surface); backdrop-filter:blur(10px); min-height:300px; display:flex; flex-direction:column; }
+    .output-area { flex:1; padding:20px; border-radius:var(--radius); border:1px solid var(--border); background:var(--surface); backdrop-filter:blur(10px); min-height:0; display:flex; flex-direction:column; overflow-y:auto; }
     .output-placeholder { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; color:var(--text-secondary); font-size:0.9rem; gap:6px; }
     .output-loading { display:none; flex-direction:column; align-items:center; justify-content:center; gap:16px; flex:1; }
     .spinner { width:40px; height:40px; border:3px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin 0.8s linear infinite; }
@@ -126,8 +128,8 @@
     @media (max-width: 768px) {
       .main-container { flex-direction:column; padding:8px; }
       .panel-left { max-width:100%; }
-      .pdf-container { min-height:200px; }
-      .output-area { min-height:200px; }
+      .pdf-container { min-height:0; }
+      .output-area { min-height:0; }
       .diff-btn { font-size:0.72rem; padding:8px 4px; }
     }
   </style>
@@ -142,6 +144,7 @@
       <button class="lang-btn active" id="langEn" title="English">English</button>
       <button class="lang-btn" id="langCn" title="普通話">普通話</button>
       <button class="btn-sm" id="themeToggle">🌙</button>
+      <a href="https://chowkl.gumroad.com/l/MakeItSimple" target="_blank" class="pro-btn">💎 Pro</a>
       <a href="/" class="btn-sm">← <span data-en="Back to Paste Text" data-zh="返去貼文字" data-zh-cn="返去贴文字">返去貼文字</span></a>
     </div>
   </div>
