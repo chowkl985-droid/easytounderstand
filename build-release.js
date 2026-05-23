@@ -31,8 +31,12 @@ function copyFiles() {
   };
   copyDir('public');
   copyDir('prompts');
-  // Empty data dir for user's API config
+  // Empty data dir for user's API config, but include license keys
   fs.mkdirSync(path.join(DIST, 'data'), { recursive: true });
+  const keysFile = path.join(__dirname, 'data', 'license-keys.json');
+  if (fs.existsSync(keysFile)) {
+    fs.copyFileSync(keysFile, path.join(DIST, 'data', 'license-keys.json'));
+  }
 }
 
 function createZip() {
