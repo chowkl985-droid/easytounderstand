@@ -15,7 +15,7 @@
 - **🌍 Cross-language** — Read an English paper, get the explanation in Cantonese. Read a Chinese document, get it in plain English
 - **🤖 7 AI engines** — DeepSeek / GPT-4o / Claude / Gemini / Grok / Qwen / Custom API — bring your own key
 - **🖥 Desktop App** — Double-click `MakeItEasy.exe`, browser opens automatically. No setup required
-- **💰 One-time purchase** — $39 USD. Not a subscription. Buy once, use forever.
+- **💰 One-time purchase** — $9 USD. Not a subscription. Buy once, use forever.
 
 ---
 
@@ -78,13 +78,13 @@ No. Your API key is stored only in your browser's localStorage and a local `data
 <details>
 <summary><strong>What are the free tier limits?</strong></summary>
 
-10 text explanations + 3 PDF explanations per day. Upgrade to Pro ($39 one-time) for unlimited use.
+10 text explanations + 3 PDF explanations per day. Upgrade to Pro ($9 one-time) for unlimited use.
 </details>
 
 <details>
 <summary><strong>Is Pro a subscription?</strong></summary>
 
-No. $39 USD one-time purchase. Use it forever. No monthly fees.
+No. $9 USD one-time purchase. Use it forever. No monthly fees.
 </details>
 
 <details>

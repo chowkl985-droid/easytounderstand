@@ -32,9 +32,9 @@ Paste any text or upload a PDF → it auto-splits into paragraphs → pick your 
 | Plan | What you get |
 |------|-------------|
 | **Free** | 10 text + 3 PDF uses per day (bring your own API key) |
-| **Pro — $39 USD** | One-time purchase. Unlimited text & PDF forever. |
+| **Pro — $9 USD** | One-time purchase. Unlimited text & PDF forever. |
 
-**$39 once vs ChatGPT at $20/month — pays for itself in 2 months, then free forever.**
+**$9 once vs ChatGPT at $20/month — pays for itself in 2 weeks, then free forever.**
 
 No subscription. No recurring fees. Buy once, use for life.
 
@@ -58,9 +58,9 @@ No subscription. No recurring fees. Buy once, use for life.
 | 方案 | 內容 |
 |------|------|
 | **免費** | 每日 10 次文字 + 3 次 PDF（自備 API key） |
-| **Pro — $39 USD** | 一次買斷，永久無限使用文字 + PDF |
+| **Pro — $9 USD** | 一次買斷，永久無限使用文字 + PDF |
 
-**$39 一次 vs ChatGPT $20/月 = 兩個月就回本，之後全部免費。**
+**$9 一次 vs ChatGPT $20/月 = 兩星期就回本，之後全部免費。**
 
 唔使月費，唔使訂閱。買一次，用一世。
 
@@ -71,14 +71,14 @@ No subscription. No recurring fees. Buy once, use for life.
 **Tagline:** Any language, explained in yours.
 
 **Description:**
-Paste text or upload a PDF. Pick Kid, Teen, or Working Adult difficulty. AI rewrites it in plain language — in Cantonese, Mandarin, or English. Supports DeepSeek, GPT-4o, Claude, Gemini, Grok, Qwen + custom APIs. Free tier available. Pro: $39 one-time, unlimited forever.
+Paste text or upload a PDF. Pick Kid, Teen, or Working Adult difficulty. AI rewrites it in plain language — in Cantonese, Mandarin, or English. Supports DeepSeek, GPT-4o, Claude, Gemini, Grok, Qwen + custom APIs. Free tier available. Pro: $9 one-time, unlimited forever.
 
 **Bullet Points:**
 - Cross-language: read English docs, get explanations in Cantonese/Mandarin/English
 - Paste text or upload PDF
 - 3 difficulty levels (Kid / Teen / Working Adult)
 - 7 AI engines + bring your own API key
-- Free: 10 text + 3 PDF/day. Pro: $39 one-time, unlimited.
+- Free: 10 text + 3 PDF/day. Pro: $9 one-time, unlimited.
 
 ---
 
