@@ -300,7 +300,7 @@ body {
       <button class="close-btn" id="closeActivate">✕</button>
     </div>
     <div class="modal-body">
-      <p style="margin-bottom:12px;font-size:0.85rem;color:var(--text-secondary);" data-en="Enter the license key you received after purchase." data-zh="輸入你購買後收到嘅授權碼。" data-zh-cn="输入你购买后收到的授权码。">輸入你購買後收到嘅授權碼。</p>
+      <p style="margin-bottom:16px;font-size:0.85rem;color:var(--text-secondary);" data-en="Enter the license key you received after purchase." data-zh="輸入你購買後收到嘅授權碼。" data-zh-cn="输入你购买后收到的授权码。">輸入你購買後收到嘅授權碼。</p>
       <div class="form-group">
         <input type="text" id="licenseKeyInput" placeholder="MIE-XXXX-XXXX-XXXX-XXXX" style="font-family:monospace;font-size:0.95rem;text-align:center;letter-spacing:1px;">
       </div>
@@ -308,10 +308,13 @@ body {
         <button class="btn-primary" id="activateBtn" data-en="Activate" data-zh="啟用" data-zh-cn="启用">啟用</button>
         <span class="save-toast" id="activateResult"></span>
       </div>
-      <p style="margin-top:8px;font-size:0.76rem;color:var(--text-secondary);">
-        <span data-en="Don't have a key?" data-zh="未有授權碼？" data-zh-cn="未有授权码？">未有授權碼？</span>
-        <a href="https://chowkl.gumroad.com/l/MakeItSimple" target="_blank" style="color:var(--accent);" data-en="Buy Pro $9 →" data-zh="買 Pro $9 →" data-zh-cn="买 Pro $9 →">買 Pro $9 →</a>
-      </p>
+      <div style="margin-top:16px;padding-top:12px;border-top:1px solid var(--border);">
+        <p style="font-size:0.76rem;color:var(--text-secondary);margin-bottom:8px;" data-en="Don't have a key? Buy Pro $9 — one-time, lifetime:" data-zh="未有授權碼？買 Pro $9 — 一次買斷，永久使用：" data-zh-cn="未有授权码？买 Pro $9 — 一次买断，永久使用：">未有授權碼？買 Pro $9 — 一次買斷，永久使用：</p>
+        <div style="display:flex;gap:8px;">
+          <a href="https://creem.io/YOUR_PRODUCT_ID" target="_blank" style="flex:1;padding:8px;text-align:center;background:var(--accent);color:#05262f;border-radius:6px;text-decoration:none;font-weight:700;font-size:0.82rem;" data-en="🛒 Creem (Auto Key ⚡)" data-zh="🛒 Creem（自動派 Key ⚡）" data-zh-cn="🛒 Creem（自动发 Key ⚡）">🛒 Creem（自動派 Key ⚡）</a>
+          <a href="https://chowkl.gumroad.com/l/MakeItSimple" target="_blank" style="flex:1;padding:8px;text-align:center;background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:6px;text-decoration:none;font-weight:600;font-size:0.82rem;" data-en="📦 Gumroad (Email Key)" data-zh="📦 Gumroad（Email 收 Key）" data-zh-cn="📦 Gumroad（Email 收 Key）">📦 Gumroad（Email 收 Key）</a>
+        </div>
+      </div>
     </div>
   </div>
 </div>
