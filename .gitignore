@@ -2,6 +2,8 @@
 .claude/
 node_modules/
 data/api-config.json
+data/license-keys.json
+data/activated.json
 prompts/
 dist/
 release/

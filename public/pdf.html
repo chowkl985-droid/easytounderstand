@@ -144,11 +144,33 @@
       <button class="lang-btn active" id="langEn" title="English">English</button>
       <button class="lang-btn" id="langCn" title="普通話">普通話</button>
       <button class="btn-sm" id="themeToggle">🌙</button>
-      <a href="https://chowkl.gumroad.com/l/MakeItSimple" target="_blank" class="pro-btn">💎 Pro</a>
+      <span id="proArea"><a href="https://chowkl.gumroad.com/l/MakeItSimple" target="_blank" class="pro-btn">💎 Pro $9</a></span>
       <a href="/" class="btn-sm">← <span data-en="Back to Paste Text" data-zh="返去貼文字" data-zh-cn="返去贴文字">返去貼文字</span></a>
     </div>
   </div>
 </nav>
+
+<!-- Pro Activation Modal -->
+<div class="modal-overlay" id="activateModal" style="display:none;position:fixed;inset:0;z-index:150;background:rgba(0,0,0,0.4);align-items:center;justify-content:center;">
+  <div class="modal-card" style="background:var(--bg);border-radius:12px;padding:24px;max-width:480px;width:90%;box-shadow:0 24px 64px rgba(0,0,0,0.3);">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+      <h3 data-en="🔑 Activate Pro" data-zh="🔑 啟用 Pro" data-zh-cn="🔑 启用 Pro">🔑 啟用 Pro</h3>
+      <button id="closeActivate" style="background:none;border:none;font-size:1.2rem;cursor:pointer;color:var(--text-secondary);">✕</button>
+    </div>
+    <p style="margin-bottom:12px;font-size:0.85rem;color:var(--text-secondary);" data-en="Enter the license key you received after purchase." data-zh="輸入你購買後收到嘅授權碼。" data-zh-cn="输入你购买后收到的授权码。">輸入你購買後收到嘅授權碼。</p>
+    <div style="margin-bottom:16px;">
+      <input type="text" id="licenseKeyInput" placeholder="MIE-XXXX-XXXX-XXXX-XXXX" style="width:100%;padding:10px 12px;font-family:monospace;font-size:0.95rem;text-align:center;letter-spacing:1px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--text);box-sizing:border-box;">
+    </div>
+    <div style="margin-bottom:12px;">
+      <button id="activateBtn" style="padding:10px 24px;background:var(--accent);color:#05262f;border:none;border-radius:8px;cursor:pointer;font-weight:700;margin-right:10px;" data-en="Activate" data-zh="啟用" data-zh-cn="启用">啟用</button>
+      <span id="activateResult" style="font-size:0.82rem;"></span>
+    </div>
+    <p style="font-size:0.76rem;color:var(--text-secondary);">
+      <span data-en="Don't have a key?" data-zh="未有授權碼？" data-zh-cn="未有授权码？">未有授權碼？</span>
+      <a href="https://chowkl.gumroad.com/l/MakeItSimple" target="_blank" style="color:var(--accent);" data-en="Buy Pro $9 →" data-zh="買 Pro $9 →" data-zh-cn="买 Pro $9 →">買 Pro $9 →</a>
+    </p>
+  </div>
+</div>
 
 <main class="main-container">
   <section class="panel panel-left">
@@ -222,6 +244,7 @@ var loadingText = $('loadingText');
 
 // === Usage Tracking ===
 var PDF_LIMIT = 3;
+var proActivated = false;
 function getToday() { return new Date().toISOString().slice(0, 10); }
 function getPdfUsage() {
   var data = localStorage.getItem('ez-pdf-usage');
@@ -230,11 +253,13 @@ function getPdfUsage() {
 }
 function savePdfUsage(data) { localStorage.setItem('ez-pdf-usage', JSON.stringify(data)); }
 function getPdfRemaining() {
+  if (proActivated) return 999;
   var u = getPdfUsage();
   if (u.date !== getToday()) { u = { date: getToday(), count: 0 }; savePdfUsage(u); }
   return PDF_LIMIT - u.count;
 }
 function useOnePdf() {
+  if (proActivated) { updatePdfUsageUI(); return; }
   var u = getPdfUsage();
   if (u.date !== getToday()) { u = { date: getToday(), count: 0 }; }
   u.count++;
@@ -242,11 +267,15 @@ function useOnePdf() {
   updatePdfUsageUI();
 }
 function updatePdfUsageUI() {
+  if (proActivated) {
+    $('usagePdfCounter').innerHTML = '<span style="color:var(--accent);font-weight:600;">Pro Unlimited ✓</span>';
+    return;
+  }
   var remaining = getPdfRemaining();
   var isEn = state.language === 'en';
   var isCn = state.language === 'zh-cn';
   if (remaining <= 0) {
-    $('usagePdfCounter').innerHTML = (isEn ? '<span style="color:#ff3b30;">0/' + PDF_LIMIT + ' uses left today. <span style="cursor:pointer;text-decoration:underline;color:var(--accent);" onclick="window.open(\'https://chowkl.gumroad.com/l/MakeItSimple\',\'_blank\')">Upgrade to Pro →</span>' : (isCn ? '<span style="color:#ff3b30;">0/' + PDF_LIMIT + ' 次。 <span style="cursor:pointer;text-decoration:underline;color:var(--accent);" onclick="window.open(\'https://chowkl.gumroad.com/l/MakeItSimple\',\'_blank\')">升级到 Pro →</span>' : '<span style="color:#ff3b30;">0/' + PDF_LIMIT + ' 次。<span style="cursor:pointer;text-decoration:underline;color:var(--accent);" onclick="window.open(\'https://chowkl.gumroad.com/l/MakeItSimple\',\'_blank\')">升級到 Pro →</span>'));
+    $('usagePdfCounter').innerHTML = (isEn ? '<span style="color:#ff3b30;">0/' + PDF_LIMIT + ' uses left today. <span style="cursor:pointer;text-decoration:underline;color:var(--accent);" onclick="openActivateModal()">Upgrade to Pro →</span>' : (isCn ? '<span style="color:#ff3b30;">0/' + PDF_LIMIT + ' 次。 <span style="cursor:pointer;text-decoration:underline;color:var(--accent);" onclick="openActivateModal()">升级到 Pro →</span>' : '<span style="color:#ff3b30;">0/' + PDF_LIMIT + ' 次。<span style="cursor:pointer;text-decoration:underline;color:var(--accent);" onclick="openActivateModal()">升級到 Pro →</span>'));
     $('explainPdfBtn').disabled = true;
   } else {
     $('usagePdfCounter').innerHTML = (isEn ? 'PDF: <strong>' + remaining + '</strong>/' + PDF_LIMIT + ' free today' : (isCn ? 'PDF：<strong>' + remaining + '</strong>/' + PDF_LIMIT + ' 次免费' : 'PDF：<strong>' + remaining + '</strong>/' + PDF_LIMIT + ' 次免費'));
@@ -255,10 +284,16 @@ function updatePdfUsageUI() {
 }
 
 // === Init ===
+checkActivation();
 loadConfig();
   updatePdfUsageUI();
 initLanguage();
 initTheme();
+
+// Activation modal handlers
+$('closeActivate').addEventListener('click', function() { $('activateModal').style.display = 'none'; });
+$('activateBtn').addEventListener('click', doActivate);
+$('licenseKeyInput').addEventListener('keydown', function(e) { if (e.key === 'Enter') doActivate(); });
 
 uploadZone.addEventListener('click', function() { fileInput.click(); });
 uploadZone.addEventListener('dragover', function(e) { e.preventDefault(); uploadZone.classList.add('dragover'); });
@@ -523,6 +558,62 @@ function renderMarkdown(text) {
   html = html.replace(/\n\n/g, '<br><br>');
   html = html.replace(/\n/g, '<br>');
   return html;
+}
+
+// === Pro Activation ===
+function checkActivation() {
+  fetch('/api/activation-status').then(function(r) { return r.json(); }).then(function(data) {
+    proActivated = data.activated;
+    updateProUI();
+    updatePdfUsageUI();
+  }).catch(function() {});
+}
+
+function updateProUI() {
+  var area = $('proArea');
+  if (proActivated) {
+    area.innerHTML = '<span style="color:var(--accent);font-weight:700;font-size:0.85rem;">Pro ✓</span>';
+  } else {
+    area.innerHTML = '<a href="#" class="pro-btn" id="proLink">💎 Pro $9</a>';
+    setTimeout(function() {
+      var link = $('proLink');
+      if (link) link.addEventListener('click', function(e) { e.preventDefault(); openActivateModal(); });
+    }, 50);
+  }
+}
+
+function openActivateModal() {
+  $('activateModal').style.display = 'flex';
+}
+
+function doActivate() {
+  var key = $('licenseKeyInput').value.trim();
+  var result = $('activateResult');
+  if (!key) { result.textContent = '請輸入授權碼'; return; }
+
+  $('activateBtn').disabled = true;
+  result.textContent = '';
+  fetch('/api/activate', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ key: key })
+  }).then(function(r) { return r.json(); }).then(function(data) {
+    $('activateBtn').disabled = false;
+    if (data.ok) {
+      proActivated = true;
+      updateProUI();
+      updatePdfUsageUI();
+      $('activateModal').style.display = 'none';
+      result.textContent = '';
+    } else if (data.error === 'key_used') {
+      result.innerHTML = '<span style="color:#ff3b30;">此授權碼已被使用</span>';
+    } else {
+      result.innerHTML = '<span style="color:#ff3b30;">授權碼無效</span>';
+    }
+  }).catch(function() {
+    $('activateBtn').disabled = false;
+    result.innerHTML = '<span style="color:#ff3b30;">連線失敗，請重試</span>';
+  });
 }
 </script>
 </body>

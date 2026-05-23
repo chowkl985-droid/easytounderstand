@@ -9,6 +9,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 const DATA_DIR = path.join(__dirname, 'data');
 const CONFIG_FILE = path.join(DATA_DIR, 'api-config.json');
+const KEYS_FILE = path.join(DATA_DIR, 'license-keys.json');
+const ACTIVATED_FILE = path.join(DATA_DIR, 'activated.json');
 
 function ensureDataDir() {
   if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
@@ -107,6 +109,61 @@ app.post('/api/explain', async (req, res) => {
     }
     res.status(500).json({ error: 'unknown', detail: e.message });
   }
+});
+
+// === Pro Activation ===
+function loadKeyPool() {
+  if (!fs.existsSync(KEYS_FILE)) return {};
+  try { return JSON.parse(fs.readFileSync(KEYS_FILE, 'utf-8')); } catch { return {}; }
+}
+
+function saveKeyPool(pool) {
+  ensureDataDir();
+  fs.writeFileSync(KEYS_FILE, JSON.stringify(pool, null, 2), 'utf-8');
+}
+
+function isActivated() {
+  if (!fs.existsSync(ACTIVATED_FILE)) return false;
+  try {
+    const data = JSON.parse(fs.readFileSync(ACTIVATED_FILE, 'utf-8'));
+    return data.activated === true;
+  } catch { return false; }
+}
+
+function saveActivation(keyUsed) {
+  ensureDataDir();
+  fs.writeFileSync(ACTIVATED_FILE, JSON.stringify({
+    activated: true,
+    key: keyUsed,
+    activatedAt: new Date().toISOString()
+  }, null, 2), 'utf-8');
+}
+
+app.get('/api/activation-status', (req, res) => {
+  res.json({ activated: isActivated() });
+});
+
+app.post('/api/activate', (req, res) => {
+  const { key } = req.body;
+  if (!key || typeof key !== 'string') return res.status(400).json({ error: 'key required' });
+
+  if (isActivated()) return res.json({ ok: true, alreadyActivated: true });
+
+  const pool = loadKeyPool();
+  const normalized = key.trim().toUpperCase();
+
+  if (!pool.hasOwnProperty(normalized)) {
+    return res.json({ ok: false, error: 'invalid_key' });
+  }
+  if (pool[normalized] === true) {
+    return res.json({ ok: false, error: 'key_used' });
+  }
+
+  // Consume the key and activate
+  pool[normalized] = true;
+  saveKeyPool(pool);
+  saveActivation(normalized);
+  res.json({ ok: true });
 });
 
 const PORT = process.env.PORT || 8080;

@@ -247,7 +247,7 @@ body {
     <div class="nav-actions">
       <a href="pdf.html" class="lang-btn" title="上載 PDF 解釋" data-en-title="Upload PDF to explain" data-zh-title="上載 PDF 解釋" data-zh-cn-title="上传 PDF 解释" style="text-decoration:none;">📄 PDF</a>
 	      <button class="icon-btn" id="settingsBtn" title="API 設定" data-en-title="Settings" data-zh-title="API 設定" data-zh-cn-title="API 设置">⚙️</button>
-	      <a href="https://chowkl.gumroad.com/l/MakeItSimple" target="_blank" class="pro-btn" data-en="💎 Pro" data-zh="💎 Pro" data-zh-cn="💎 Pro">💎 Pro</a>
+	      <span id="proArea"><a href="https://chowkl.gumroad.com/l/MakeItSimple" target="_blank" class="pro-btn" data-en="💎 Pro $9" data-zh="💎 Pro $9" data-zh-cn="💎 Pro $9">💎 Pro $9</a></span>
       <span class="lang-group" id="langGroup"><button class="lang-btn" id="langZh" title="廣東話">粵語</button>
 	      <button class="lang-btn active" id="langEn" title="English">English</button>
 	      <button class="lang-btn" id="langCn" title="普通話">普通話</button></span><select class="lang-select" id="langSelect" style="display:none;"><option value="zh">粵語</option><option value="en">English</option><option value="zh-cn">普通話</option></select><span class="lang-tooltip" id="langTooltip">已根據瀏覽器語言自動選擇</span>
@@ -288,6 +288,30 @@ body {
         <button class="btn-primary" id="saveConfigBtn" data-en="Save Settings" data-zh="儲存設定" data-zh-cn="保存设置">儲存設定</button>
         <span class="save-toast" id="saveToast" data-en="Saved ✅" data-zh="已儲存 ✅" data-zh-cn="已保存 ✅">已儲存 ✅</span>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- Pro Activation Modal -->
+<div class="modal-overlay" id="activateModal">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h3 data-en="🔑 Activate Pro" data-zh="🔑 啟用 Pro" data-zh-cn="🔑 启用 Pro">🔑 啟用 Pro</h3>
+      <button class="close-btn" id="closeActivate">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="margin-bottom:12px;font-size:0.85rem;color:var(--text-secondary);" data-en="Enter the license key you received after purchase." data-zh="輸入你購買後收到嘅授權碼。" data-zh-cn="输入你购买后收到的授权码。">輸入你購買後收到嘅授權碼。</p>
+      <div class="form-group">
+        <input type="text" id="licenseKeyInput" placeholder="MIE-XXXX-XXXX-XXXX-XXXX" style="font-family:monospace;font-size:0.95rem;text-align:center;letter-spacing:1px;">
+      </div>
+      <div class="form-group">
+        <button class="btn-primary" id="activateBtn" data-en="Activate" data-zh="啟用" data-zh-cn="启用">啟用</button>
+        <span class="save-toast" id="activateResult"></span>
+      </div>
+      <p style="margin-top:8px;font-size:0.76rem;color:var(--text-secondary);">
+        <span data-en="Don't have a key?" data-zh="未有授權碼？" data-zh-cn="未有授权码？">未有授權碼？</span>
+        <a href="https://chowkl.gumroad.com/l/MakeItSimple" target="_blank" style="color:var(--accent);" data-en="Buy Pro $9 →" data-zh="買 Pro $9 →" data-zh-cn="买 Pro $9 →">買 Pro $9 →</a>
+      </p>
     </div>
   </div>
 </div>
@@ -384,6 +408,7 @@ var stepHint = $('stepHint');
 // === Init ===
 // === Usage Tracking ===
 var DAILY_LIMIT = 10;
+var proActivated = false;
 
 function getToday() { return new Date().toISOString().slice(0, 10); }
 
@@ -396,12 +421,14 @@ function getUsage() {
 function saveUsage(data) { localStorage.setItem('ez-usage', JSON.stringify(data)); }
 
 function getRemaining() {
+  if (proActivated) return 999;
   var u = getUsage();
   if (u.date !== getToday()) { u = { date: getToday(), count: 0 }; saveUsage(u); }
   return DAILY_LIMIT - u.count;
 }
 
 function useOne() {
+  if (proActivated) { updateUsageUI(); return; }
   var u = getUsage();
   if (u.date !== getToday()) { u = { date: getToday(), count: 0 }; }
   u.count++;
@@ -410,11 +437,15 @@ function useOne() {
 }
 
 function updateUsageUI() {
+  if (proActivated) {
+    usageCounter.innerHTML = '<span style="color:var(--accent);font-weight:600;">Pro Unlimited ✓</span>';
+    return;
+  }
   var remaining = getRemaining();
   var isEn = state.language === 'en';
   var isCn = state.language === 'zh-cn';
   if (remaining <= 0) {
-    usageCounter.innerHTML = (isEn ? 'No uses left today. <span class="upgrade-link" onclick="window.open(\'https://chowkl.gumroad.com/l/MakeItSimple\',\'_blank\')">Upgrade to Pro →</span>' : (isCn ? '今天次数用完了。<span class="upgrade-link" onclick="window.open(\'https://chowkl.gumroad.com/l/MakeItSimple\',\'_blank\')">升级到 Pro →</span>' : '今日次數用完了。<span class="upgrade-link" onclick="window.open(\'https://chowkl.gumroad.com/l/MakeItSimple\',\'_blank\')">升級到 Pro →</span>'));
+    usageCounter.innerHTML = (isEn ? 'No uses left today. <span class="upgrade-link" onclick="openActivateModal()">Upgrade to Pro →</span>' : (isCn ? '今天次数用完了。<span class="upgrade-link" onclick="openActivateModal()">升级到 Pro →</span>' : '今日次數用完了。<span class="upgrade-link" onclick="openActivateModal()">升級到 Pro →</span>'));
     explainBtn.disabled = true;
   } else {
     usageCounter.innerHTML = (isEn ? '<span class="remaining">' + remaining + '</span>/' + DAILY_LIMIT + ' uses left today' : (isCn ? '今日剩余 <span class="remaining">' + remaining + '</span>/' + DAILY_LIMIT + ' 次' : '今日剩餘 <span class="remaining">' + remaining + '</span>/' + DAILY_LIMIT + ' 次'));
@@ -422,6 +453,7 @@ function updateUsageUI() {
 }
 
 function init() {
+  checkActivation();
   loadConfigFromServer();
   updateUsageUI();
   loadProviders();
@@ -432,6 +464,9 @@ function init() {
   $('explainBtn').addEventListener('click', doExplain);
   $('settingsBtn').addEventListener('click', function() { settingsModal.classList.add('show'); });
   $('closeSettings').addEventListener('click', function() { settingsModal.classList.remove('show'); });
+  $('closeActivate').addEventListener('click', function() { $('activateModal').classList.remove('show'); });
+  $('activateBtn').addEventListener('click', doActivate);
+  $('licenseKeyInput').addEventListener('keydown', function(e) { if (e.key === 'Enter') doActivate(); });
   $('testConnBtn').addEventListener('click', testConnection);
   $('saveConfigBtn').addEventListener('click', saveConfig);
   $('themeToggle').addEventListener('click', toggleTheme);
@@ -1043,6 +1078,62 @@ function renderMarkdown(text) {
   html = html.replace(/\n\n/g, '<br><br>');
   html = html.replace(/\n/g, '<br>');
   return html;
+}
+
+// === Pro Activation ===
+function checkActivation() {
+  fetch('/api/activation-status').then(function(r) { return r.json(); }).then(function(data) {
+    proActivated = data.activated;
+    updateProUI();
+    updateUsageUI();
+  }).catch(function() {});
+}
+
+function updateProUI() {
+  var area = $('proArea');
+  if (proActivated) {
+    area.innerHTML = '<span style="color:var(--accent);font-weight:700;font-size:0.85rem;">Pro ✓</span>';
+  } else {
+    area.innerHTML = '<a href="#" class="pro-btn" id="proLink" data-en="💎 Pro $9" data-zh="💎 Pro $9" data-zh-cn="💎 Pro $9">💎 Pro $9</a>';
+    setTimeout(function() {
+      var link = $('proLink');
+      if (link) link.addEventListener('click', function(e) { e.preventDefault(); openActivateModal(); });
+    }, 50);
+  }
+}
+
+function openActivateModal() {
+  $('activateModal').classList.add('show');
+}
+
+function doActivate() {
+  var key = $('licenseKeyInput').value.trim();
+  var result = $('activateResult');
+  if (!key) { result.textContent = '請輸入授權碼'; return; }
+
+  $('activateBtn').disabled = true;
+  result.textContent = '';
+  fetch('/api/activate', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ key: key })
+  }).then(function(r) { return r.json(); }).then(function(data) {
+    $('activateBtn').disabled = false;
+    if (data.ok) {
+      proActivated = true;
+      updateProUI();
+      updateUsageUI();
+      $('activateModal').classList.remove('show');
+      result.textContent = '';
+    } else if (data.error === 'key_used') {
+      result.innerHTML = '<span style="color:#ff3b30;">此授權碼已被使用</span>';
+    } else {
+      result.innerHTML = '<span style="color:#ff3b30;">授權碼無效</span>';
+    }
+  }).catch(function() {
+    $('activateBtn').disabled = false;
+    result.innerHTML = '<span style="color:#ff3b30;">連線失敗，請重試</span>';
+  });
 }
 
 // === Start ===
