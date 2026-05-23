@@ -11,6 +11,7 @@
     "express": "^5.2.1"
   },
   "devDependencies": {
-    "esbuild": "^0.28.0"
+    "esbuild": "^0.28.0",
+    "puppeteer": "^25.0.4"
   }
 }
