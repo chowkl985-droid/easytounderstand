@@ -4,6 +4,7 @@ const crypto = require('crypto');
 
 const COUNT = parseInt(process.argv[2]) || 100;
 const FILE = path.join(__dirname, 'data', 'license-keys.json');
+const CREEM_FILE = path.join(__dirname, 'data', 'keys-for-creem.txt');
 
 function randHex(len) {
   return crypto.randomBytes(Math.ceil(len / 2)).toString('hex').slice(0, len).toUpperCase();
@@ -24,18 +25,25 @@ function generateKey() {
   return `MIE-${a}-${b}-${c}-${chk}`;
 }
 
-const keys = {};
+const keys = new Set();
 for (let i = 0; i < COUNT; i++) {
   let key;
-  do { key = generateKey(); } while (keys[key]);
-  keys[key] = false;
+  do { key = generateKey(); } while (keys.has(key));
+  keys.add(key);
 }
 
 const dir = path.dirname(FILE);
 if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-fs.writeFileSync(FILE, JSON.stringify(keys, null, 2), 'utf-8');
 
-console.log(`Generated ${Object.keys(keys).length} license keys → ${FILE}`);
+// Save JSON backup (for your reference, not shipped to users)
+const keyObj = {};
+keys.forEach(k => { keyObj[k] = false; });
+fs.writeFileSync(FILE, JSON.stringify(keyObj, null, 2), 'utf-8');
+
+// Save plain text for Creem upload (one key per line)
+fs.writeFileSync(CREEM_FILE, Array.from(keys).join('\n'), 'utf-8');
+
+console.log(`Generated ${keys.size} license keys → ${FILE}`);
+console.log(`Creem upload file → ${CREEM_FILE}`);
 console.log('Sample keys:');
-const samples = Object.keys(keys).slice(0, 5);
-samples.forEach(k => console.log('  ' + k));
+Array.from(keys).slice(0, 5).forEach(k => console.log('  ' + k));

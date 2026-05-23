@@ -3,7 +3,9 @@
 node_modules/
 data/api-config.json
 data/license-keys.json
+data/keys-for-creem.txt
 data/activated.json
+data/used-keys.json
 prompts/
 dist/
 release/

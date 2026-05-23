@@ -9,7 +9,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 const DATA_DIR = path.join(__dirname, 'data');
 const CONFIG_FILE = path.join(DATA_DIR, 'api-config.json');
-const KEYS_FILE = path.join(DATA_DIR, 'license-keys.json');
 const ACTIVATED_FILE = path.join(DATA_DIR, 'activated.json');
 
 function ensureDataDir() {
@@ -112,14 +111,35 @@ app.post('/api/explain', async (req, res) => {
 });
 
 // === Pro Activation ===
-function loadKeyPool() {
-  if (!fs.existsSync(KEYS_FILE)) return {};
-  try { return JSON.parse(fs.readFileSync(KEYS_FILE, 'utf-8')); } catch { return {}; }
+const USED_KEYS_FILE = path.join(DATA_DIR, 'used-keys.json');
+const ACTIVATION_SECRET = 'easytounderstand-pro-2026';
+
+function computeChecksum(s) {
+  let h = 0;
+  for (let i = 0; i < s.length; i++) h = ((h << 5) - h + s.charCodeAt(i)) | 0;
+  return (Math.abs(h) % 0x10000).toString(16).padStart(4, '0').toUpperCase();
 }
 
-function saveKeyPool(pool) {
+function validateKey(key) {
+  const parts = key.split('-');
+  if (parts.length !== 5) return false;
+  if (parts[0] !== 'MIE') return false;
+  if (parts.slice(1, 4).some(p => p.length !== 4 || !/^[0-9A-F]+$/.test(p))) return false;
+  const base = parts[1] + parts[2] + parts[3];
+  const expected = computeChecksum(base);
+  return parts[4] === expected;
+}
+
+function loadUsedKeys() {
+  if (!fs.existsSync(USED_KEYS_FILE)) return [];
+  try { return JSON.parse(fs.readFileSync(USED_KEYS_FILE, 'utf-8')); } catch { return []; }
+}
+
+function saveUsedKey(keyHash) {
   ensureDataDir();
-  fs.writeFileSync(KEYS_FILE, JSON.stringify(pool, null, 2), 'utf-8');
+  const used = loadUsedKeys();
+  used.push(keyHash);
+  fs.writeFileSync(USED_KEYS_FILE, JSON.stringify(used, null, 2), 'utf-8');
 }
 
 function isActivated() {
@@ -134,7 +154,6 @@ function saveActivation(keyUsed) {
   ensureDataDir();
   fs.writeFileSync(ACTIVATED_FILE, JSON.stringify({
     activated: true,
-    key: keyUsed,
     activatedAt: new Date().toISOString()
   }, null, 2), 'utf-8');
 }
@@ -149,19 +168,21 @@ app.post('/api/activate', (req, res) => {
 
   if (isActivated()) return res.json({ ok: true, alreadyActivated: true });
 
-  const pool = loadKeyPool();
   const normalized = key.trim().toUpperCase();
 
-  if (!pool.hasOwnProperty(normalized)) {
+  if (!validateKey(normalized)) {
     return res.json({ ok: false, error: 'invalid_key' });
   }
-  if (pool[normalized] === true) {
+
+  // Prevent same key being reused across machines via hash
+  const crypto = require('crypto');
+  const keyHash = crypto.createHash('sha256').update(normalized).digest('hex');
+  const used = loadUsedKeys();
+  if (used.includes(keyHash)) {
     return res.json({ ok: false, error: 'key_used' });
   }
 
-  // Consume the key and activate
-  pool[normalized] = true;
-  saveKeyPool(pool);
+  saveUsedKey(keyHash);
   saveActivation(normalized);
   res.json({ ok: true });
 });
