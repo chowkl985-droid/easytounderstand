@@ -1,6 +1,6 @@
 {
   "name": "easytounderstand",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "白話翻譯機 — 複雜文章變簡單白話",
   "main": "server.js",
   "scripts": {

@@ -37,7 +37,7 @@ function copyFiles() {
 
 function createZip() {
   console.log('\n→ Creating release zip...');
-  const filename = `MakeItEasy-v1.0.0-windows-x64.zip`;
+  const filename = `MakeItEasy-v1.0.1-windows-x64.zip`;
   const outPath = path.join(RELEASE, filename);
   // Use PowerShell to create zip
   const ps = `Compress-Archive -Path '${DIST}\\*' -DestinationPath '${outPath}' -Force`;
